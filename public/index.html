@@ -24,7 +24,12 @@
       work correctly both with client-side routing and a non-root public URL.
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
-    <title>React App</title>
+    <title>Paint by number generator</title>
+    
+    <link rel="stylesheet" href="styles/lib/materialize.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+
+    <link rel='stylesheet' href='styles/main.css' />
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
@@ -39,5 +44,15 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script src="scripts/lib/saveSvgAsPng.js"></script>
+    <script src="scripts/lib/require.js"></script>
+    <script src="scripts/lib/jquery-1.11.0.min.js"></script>
+    <script src="scripts/lib/materialize.min.js"></script>
+    <script src='scripts/main.js'></script>
+    <script>
+        requirejs(['main'], function (MyApp) {
+
+        });
+    </script>
   </body>
 </html>

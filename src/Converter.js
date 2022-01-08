@@ -50,18 +50,18 @@ function Converter() {
                             </div>
                             <div class="col s2">
                                 <label for="txtResizeWidth">width</label>
-                                <input id="txtResizeWidth" type="number" value="1024" min="1" class="validate"/>
+                                <input id="txtResizeWidth" type="number" defaultValue="1024" min="1" class="validate"/>
                             </div>
                             <div class="col s2">
                                 <label for="txtResizeHeight">height</label>
-                                <input id="txtResizeHeight" type="number" value="1024" min="1" class="validate"/>
+                                <input id="txtResizeHeight" type="number" defaultValue="1024" min="1" class="validate"/>
                             </div>
                         </div>
                     </li>
                     <li class="collection-item">
                         <div class="row">
                             <div class="input-field col s2">
-                                <input id="txtNrOfClusters" type="number" value="16" min="1" class="validate"/>
+                                <input id="txtNrOfClusters" type="number" defaultValue="16" min="1" class="validate"/>
                                 <label for="txtNrOfClusters">Number of colors
                                     <i class="material-icons tooltipped"
                                         data-tooltip="The number of colors to quantize the image to">info</i>
@@ -69,7 +69,7 @@ function Converter() {
                             </div>
 
                             <div class="input-field col s2">
-                                <input id="txtClusterPrecision" type="number" value="1" min="1" step="0.05"
+                                <input id="txtClusterPrecision" type="number" defaultValue="1" min="1" step="0.05"
                                     class="validate"/>
                                 <label for="txtClusterPrecision">Cluster precision
                                     <i class="material-icons tooltipped"
@@ -78,7 +78,7 @@ function Converter() {
                             </div>
                             
                             <div class="input-field col s2">
-                                <input id="txtRandomSeed" type="number" value="0" min="0" step="1"
+                                <input id="txtRandomSeed" type="number" defaultValue="0" min="0" step="1"
                                     class="validate"/>
                                 <label for="txtRandomSeed">Random seed
                                     <i class="material-icons tooltipped"
@@ -130,7 +130,7 @@ function Converter() {
                     <li class="collection-item">
                         <div class="row">
                             <div class="input-field col s4">
-                                <input id="txtNarrowPixelStripCleanupRuns" type="number" value="3" min="0"
+                                <input id="txtNarrowPixelStripCleanupRuns" type="number" defaultValue="3" min="0"
                                     class="validate"/>
                                 <label for="txtNarrowPixelStripCleanupRuns">Number of runs for narrow pixel cleanup
                                     <i class="material-icons tooltipped"
@@ -138,7 +138,7 @@ function Converter() {
                                 </label>
                             </div>
                             <div class="input-field col s4">
-                                <input id="txtRemoveFacetsSmallerThan" type="number" value="20" min="1"
+                                <input id="txtRemoveFacetsSmallerThan" type="number" defaultValue="20" min="1"
                                     class="validate"/>
                                 <label for="txtRemoveFacetsSmallerThan">Remove small facets smaller than (pixels)
                                     <i class="material-icons tooltipped"
@@ -146,7 +146,7 @@ function Converter() {
                                 </label>
                             </div>
                             <div class="input-field col s4">
-                                <input id="txtMaximumNumberOfFacets" type="number" value="100000" min="1"
+                                <input id="txtMaximumNumberOfFacets" type="number" defaultValue="100000" min="1"
                                     class="validate"/>
                                 <label for="txtMaximumNumberOfFacets">Maximum number of facets
                                     <i class="material-icons tooltipped"
@@ -185,7 +185,7 @@ function Converter() {
                     <li class="collection-item">
                         <div class="row">
                             <div class="input-field col s5">
-                                <input id="txtNrOfTimesToHalveBorderSegments" type="number" value="2" min="0"
+                                <input id="txtNrOfTimesToHalveBorderSegments" type="number" defaultValue="2" min="0"
                                     class="validate"/>
                                 <label for="txtNrOfTimesToHalveBorderSegments">Amount of times to halve border segment
                                     complexity)
@@ -336,7 +336,7 @@ function Converter() {
                 <div class="row">
                     <div class="col s3">
                         <div class="input-field">
-                            <input placeholder="SVG Size multiplier" id="txtSizeMultiplier" type="number" value="3"
+                            <input placeholder="SVG Size multiplier" id="txtSizeMultiplier" type="number" defaultValue="3"
                                 min="1" class="validate"/>
                             <label for="txtSizeMultiplier">SVG size multiplier
                                 <i class="material-icons tooltipped"
@@ -346,7 +346,7 @@ function Converter() {
                     </div>
                     <div class="col s3">
                         <div class="input-field">
-                            <input placeholder="Label font size" id="txtLabelFontSize" type="number" value="50" min="1"
+                            <input placeholder="Label font size" id="txtLabelFontSize" type="number" defaultValue="50" min="1"
                                 max="100"/>
                             <label for="txtLabelFontSize">Label font size
                                 <i class="material-icons tooltipped"
@@ -356,7 +356,7 @@ function Converter() {
                     </div>
                     <div class="col s3">
                         <div class="input-field">
-                            <input placeholder="Label font size" id="txtLabelFontColor" type="text" value="#000"/>
+                            <input placeholder="Label font size" id="txtLabelFontColor" type="text" defaultValue="#000"/>
                             <label for="txtLabelFontColor">Label font color
                                 <i class="material-icons tooltipped"
                                     data-tooltip="Font color of the color number labels in each facet">info</i>

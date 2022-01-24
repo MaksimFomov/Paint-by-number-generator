@@ -1,18 +1,29 @@
 import "./styles/lib/materialize.min.css";
 import "./styles/main.css";
+import ReactTooltip from "react-tooltip";
 
 import React from "react";
 
-function Converter() {
+import translate from "./i18n/translate";
+
+const tooltip = (idTooltip) => {
+  return (
+    <ReactTooltip id={idTooltip} place="bottom" type="info" effect="solid">
+      <span>{translate(idTooltip + "Info")}</span>
+    </ReactTooltip>
+  );
+};
+
+const Converter = () => {
   const [checked, setChecked] = React.useState(true);
   const [checked1, setChecked1] = React.useState(true);
   const [checked2, setChecked2] = React.useState(true);
   const [checked3, setChecked3] = React.useState(true);
   const [checked4, setChecked4] = React.useState(true);
-  const [checked5, setChecked5] = React.useState(true);
-  const [checked6, setChecked6] = React.useState(true);
+  const [checked5, setChecked5] = React.useState(false);
+  const [checked6, setChecked6] = React.useState(false);
   const [checked7, setChecked7] = React.useState(true);
-  const [checked8, setChecked8] = React.useState(true);
+  const [checked8, setChecked8] = React.useState(false);
 
   return (
     <div className="Converter">
@@ -20,28 +31,27 @@ function Converter() {
         <div class="row">
           <h2> </h2>
           <span>
-            Paste from clipboard (ctrl+v) to change the image (or browse for a
-            file{" "}
+            {translate("inputFile")}{" "}
             <input
               id="file"
               type="file"
               accept="image/x-png,image/gif,image/jpeg"
             ></input>
-            ). Large images are very slow to process though.
+            ){translate("inputFile1")}
           </span>
           <br />
           <span>
-            Example images:
+            {translate("exampleImages")}
             <a id="lnkTrivial" href="/#">
-              trivial
+              {translate("trivial")}
             </a>{" "}
             -
             <a id="lnkSmall" href="/#">
-              small
+              {translate("small")}
             </a>{" "}
             -
             <a id="lnkMedium" href="/#">
-              medium
+              {translate("medium")}
             </a>
           </span>
         </div>
@@ -49,10 +59,10 @@ function Converter() {
           <div class="col s12">
             <ul class="tabs">
               <li class="tab col s2">
-                <a href="#input-pane">Input</a>
+                <a href="#input-pane">{translate("input")}</a>
               </li>
               <li class="tab col s2">
-                <a href="#options-pane">Options</a>
+                <a href="#options-pane">{translate("options")}</a>
               </li>
             </ul>
           </div>
@@ -94,19 +104,14 @@ function Converter() {
                         checked={checked3}
                         onChange={() => setChecked3(!checked3)}
                       />
-                      <span>
-                        Resize image larger than
-                        <i
-                          class="material-icons tooltipped"
-                          data-tooltip="If checked and the input image is larger than the given dimensions then it will be resized to fit but will maintain its ratio."
-                        >
-                          info
-                        </i>
+                      <span data-tip data-for="resizeImage">
+                        {translate("resizeImage")}
+                        {tooltip("resizeImage")}
                       </span>
                     </label>
                   </div>
                   <div class="col s2">
-                    <label for="txtResizeWidth">width</label>
+                    <label for="txtResizeWidth">{translate("width")}</label>
                     <input
                       id="txtResizeWidth"
                       type="number"
@@ -116,7 +121,7 @@ function Converter() {
                     />
                   </div>
                   <div class="col s2">
-                    <label for="txtResizeHeight">height</label>
+                    <label for="txtResizeHeight">{translate("height")}</label>
                     <input
                       id="txtResizeHeight"
                       type="number"
@@ -137,14 +142,13 @@ function Converter() {
                       min="1"
                       class="validate"
                     />
-                    <label for="txtNrOfClusters">
-                      Number of colors
-                      <i
-                        class="material-icons tooltipped"
-                        data-tooltip="The number of colors to quantize the image to"
-                      >
-                        info
-                      </i>
+                    <label
+                      for="txtClusterPrecision"
+                      data-tip
+                      data-for="numberOfColors"
+                    >
+                      {translate("numberOfColors")}
+                      {tooltip("numberOfColors")}
                     </label>
                   </div>
 
@@ -157,14 +161,13 @@ function Converter() {
                       step="0.05"
                       class="validate"
                     />
-                    <label for="txtClusterPrecision">
-                      Cluster precision
-                      <i
-                        class="material-icons tooltipped"
-                        data-tooltip="The threshold delta distance of the k-means clustering to reach before stopping. Having a bigger value will speed up the clustering but may yield suboptimal clusters."
-                      >
-                        info
-                      </i>
+                    <label
+                      for="txtClusterPrecision"
+                      data-tip
+                      data-for="clusterPrecision"
+                    >
+                      {translate("clusterPrecision")}
+                      {tooltip("clusterPrecision")}
                     </label>
                   </div>
 
@@ -177,14 +180,9 @@ function Converter() {
                       step="1"
                       class="validate"
                     />
-                    <label for="txtRandomSeed">
-                      Random seed
-                      <i
-                        class="material-icons tooltipped"
-                        data-tooltip="The seed to use for the random number generator to choose the initial centroids for k-means clusering. Using the same seed ensures you will get the same result every time."
-                      >
-                        info
-                      </i>
+                    <label for="txtRandomSeed" data-tip data-for="randomSeed">
+                      {translate("randomSeed")}
+                      {tooltip("randomSeed")}
                     </label>
                   </div>
                 </div>
@@ -192,14 +190,9 @@ function Converter() {
               <li class="collection-item">
                 <div class="row">
                   <div class="col s3">
-                    <label>
-                      Clustering color space
-                      <i
-                        class="material-icons tooltipped"
-                        data-tooltip="The color space to apply clustering in"
-                      >
-                        info
-                      </i>
+                    <label data-tip data-for="clusteringColorSpace">
+                      {translate("clusteringColorSpace")}
+                      {tooltip("clusteringColorSpace")}
                     </label>
                   </div>
                   <div class="col s2">
@@ -240,14 +233,20 @@ function Converter() {
                   </div>
 
                   <div class="col s12">
-                    <label for="txtKMeansColorRestrictions">
-                      Restrict clustering colors
-                      <i
-                        class="material-icons tooltipped"
-                        data-tooltip="Specify which colors should be used, one per line in 'r,g,b' format. Use // as comment. If no colors are specified no restrictions are applied. Useful if you only have a few colors of paint on hand."
+                    <label
+                      for="txtKMeansColorRestrictions"
+                      data-tip
+                      data-for="restrictClusteringColors"
+                    >
+                      {translate("restrictClusteringColors")}
+                      <ReactTooltip
+                        id="restrictClusteringColors"
+                        place="right"
+                        type="info"
+                        effect="solid"
                       >
-                        info
-                      </i>
+                        <span>{translate("restrictClusteringColorsInfo")}</span>
+                      </ReactTooltip>
                     </label>
                     <textarea
                       id="txtKMeansColorRestrictions"
@@ -268,14 +267,13 @@ function Converter() {
                       min="0"
                       class="validate"
                     />
-                    <label for="txtNarrowPixelStripCleanupRuns">
-                      Number of runs for narrow pixel cleanup
-                      <i
-                        class="material-icons tooltipped"
-                        data-tooltip="Narrow pixel cleanup removes strips of single pixel rows, which would make some facets have some borders segments that are way too narrow to be useful. The small facet removal can introduce new narrow pixel strips, so this is repeated in a few iterative runs."
-                      >
-                        info
-                      </i>
+                    <label
+                      for="txtNarrowPixelStripCleanupRuns"
+                      data-tip
+                      data-for="numberOfRuns"
+                    >
+                      {translate("numberOfRuns")}
+                      {tooltip("numberOfRuns")}
                     </label>
                   </div>
                   <div class="input-field col s4">
@@ -286,14 +284,13 @@ function Converter() {
                       min="1"
                       class="validate"
                     />
-                    <label for="txtRemoveFacetsSmallerThan">
-                      Remove small facets smaller than (pixels)
-                      <i
-                        class="material-icons tooltipped"
-                        data-tooltip="Removes any facets that are smaller than the given amount of pixels. Lowering the value will create more detailed results but might be much harder to actually paint due to their size."
-                      >
-                        info
-                      </i>
+                    <label
+                      for="txtRemoveFacetsSmallerThan"
+                      data-tip
+                      data-for="removeSmallFacets"
+                    >
+                      {translate("removeSmallFacets")}
+                      {tooltip("removeSmallFacets")}
                     </label>
                   </div>
                   <div class="input-field col s4">
@@ -304,14 +301,13 @@ function Converter() {
                       min="1"
                       class="validate"
                     />
-                    <label for="txtMaximumNumberOfFacets">
-                      Maximum number of facets
-                      <i
-                        class="material-icons tooltipped"
-                        data-tooltip="If there are more facets than the given maximum number, keep removing the smallest facets until the limit is reached"
-                      >
-                        info
-                      </i>
+                    <label
+                      for="txtMaximumNumberOfFacets"
+                      data-tip
+                      data-for="maximumNumberOfFacets"
+                    >
+                      {translate("maximumNumberOfFacets")}
+                      {tooltip("maximumNumberOfFacets")}
                     </label>
                   </div>
                 </div>
@@ -319,14 +315,9 @@ function Converter() {
                   <div class="input-field col s6">
                     <div class="row">
                       <div class="col s4">
-                        <label>
-                          Small facet removal order
-                          <i
-                            class="material-icons tooltipped"
-                            data-tooltip="Largest to smallest will prevent boundaries from warping the shapes because the smaller facets act as border anchorpoints but can be considerably slower"
-                          >
-                            info
-                          </i>
+                        <label data-tip data-for="smallFacetRemovalOrder">
+                          {translate("smallFacetRemovalOrder")}
+                          {tooltip("smallFacetRemovalOrder")}
                         </label>
                       </div>
                       <div class="col s4">
@@ -338,7 +329,7 @@ function Converter() {
                             checked={checked7}
                             onChange={() => setChecked7(!checked7)}
                           />
-                          <span>Largest to smallest</span>
+                          <span>{translate("largestToSmallest")}</span>
                         </label>
                       </div>
                       <div class="col s4">
@@ -350,7 +341,7 @@ function Converter() {
                             checked={checked8}
                             onChange={() => setChecked8(!checked8)}
                           />
-                          <span>Smallest to largest</span>
+                          <span>{translate("smallestToLargest")}</span>
                         </label>
                       </div>
                     </div>
@@ -367,14 +358,20 @@ function Converter() {
                       min="0"
                       class="validate"
                     />
-                    <label for="txtNrOfTimesToHalveBorderSegments">
-                      Amount of times to halve border segment complexity)
-                      <i
-                        class="material-icons tooltipped"
-                        data-tooltip="Reducing the amount of points in a border segment (using haar wavelet reduction) will smooth out the quadratic curve more but at a loss of detail. <br/>A segment (shared border with a facet) will always retain its start and end point."
+                    <label
+                      for="txtNrOfTimesToHalveBorderSegments"
+                      data-tip
+                      data-for="amountOfTimes"
+                    >
+                      {translate("amountOfTimes")}
+                      <ReactTooltip
+                        id="amountOfTimes"
+                        place="top"
+                        type="info"
+                        effect="solid"
                       >
-                        info
-                      </i>
+                        <span>{translate("amountOfTimesInfo")}</span>
+                      </ReactTooltip>
                     </label>
                   </div>
                 </div>
@@ -384,7 +381,7 @@ function Converter() {
 
           <div class="col s12">
             <a1 class="waves-effect waves-light btn" id="btnProcess">
-              Process image
+              {translate("processImage")}
             </a1>
           </div>
         </div>
@@ -392,7 +389,7 @@ function Converter() {
         <div class="row">
           <div class="col s2">
             <div class="status kMeans">
-              K-means clustering
+              {translate("kMeansClustering")}
               <div class="progress">
                 <div
                   id="statusKMeans"
@@ -404,7 +401,7 @@ function Converter() {
           </div>
           <div class="col s2">
             <div class="status facetBuilding">
-              Facet building
+              {translate("facetBuilding")}
               <div class="progress">
                 <div
                   id="statusFacetBuilding"
@@ -416,7 +413,7 @@ function Converter() {
           </div>
           <div class="col s2">
             <div class="status facetReduction">
-              Small facet pruning
+              {translate("smallFacetPruning")}
               <div class="progress">
                 <div
                   id="statusFacetReduction"
@@ -428,7 +425,7 @@ function Converter() {
           </div>
           <div class="col s2">
             <div class="status facetBorderPath">
-              Border detection
+              {translate("borderDetection")}
               <div class="progress">
                 <div
                   id="statusFacetBorderPath"
@@ -440,7 +437,7 @@ function Converter() {
           </div>
           <div class="col s2">
             <div class="status facetBorderSegmentation">
-              Border segmentation
+              {translate("borderSegmentation")}
               <div class="progress">
                 <div
                   id="statusFacetBorderSegmentation"
@@ -452,7 +449,7 @@ function Converter() {
           </div>
           <div class="col s2">
             <div class="status facetLabelPlacement">
-              Label placement
+              {translate("labelPlacement")}
               <div class="progress">
                 <div
                   id="statusFacetLabelPlacement"
@@ -466,7 +463,7 @@ function Converter() {
         <div class="row">
           <div class="col s2">
             <div class="status SVGGenerate">
-              SVG generation
+              {translate("SVGGeneration")}
               <div class="progress">
                 <div
                   id="statusSVGGenerate"
@@ -482,25 +479,27 @@ function Converter() {
           <div class="col s12">
             <ul id="tabsOutput" class="tabs">
               <li class="tab col s2">
-                <a href="#kmeans-pane">Quantized image</a>
+                <a href="#kmeans-pane">{translate("quantizedImage")}e</a>
               </li>
               <li class="tab col s2">
-                <a href="#reduction-pane">Facet reduction</a>
+                <a href="#reduction-pane">{translate("facetReduction")}</a>
               </li>
               <li class="tab col s2">
-                <a href="#borderpath-pane">Border tracing</a>
+                <a href="#borderpath-pane">{translate("borderTracing")}</a>
               </li>
               <li class="tab col s2">
-                <a href="#bordersegmentation-pane">Border segmentation</a>
+                <a href="#bordersegmentation-pane">
+                  {translate("borderSegmentation")}
+                </a>
               </li>
               <li class="tab col s2">
-                <a href="#labelplacement-pane">Label placement</a>
+                <a href="#labelplacement-pane">{translate("labelPlacement")}</a>
               </li>
               <li class="tab col s2">
-                <a href="#output-pane">Output</a>
+                <a href="#output-pane">{translate("output")}</a>
               </li>
               <li class="tab col s2">
-                <a href="#log-pane">Log</a>
+                <a href="#log-pane">{translate("log")}</a>
               </li>
             </ul>
           </div>
@@ -523,7 +522,7 @@ function Converter() {
           <div id="output-pane" class="col s12">
             <div class="row">
               <div class="col s2">
-                <label>SVG Render options</label>
+                <label>{translate("SVGRenderOptions")}</label>
               </div>
               <div class="col s2">
                 <label>
@@ -533,7 +532,7 @@ function Converter() {
                     checked={checked}
                     onChange={() => setChecked(!checked)}
                   />
-                  <span>Show labels</span>
+                  <span>{translate("showLabels")}</span>
                 </label>
               </div>
               <div class="col s2">
@@ -544,7 +543,7 @@ function Converter() {
                     checked={!checked1}
                     onChange={() => setChecked1(!checked1)}
                   />
-                  <span>Fill facets</span>
+                  <span>{translate("fillFacets")}</span>
                 </label>
               </div>
               <div class="col s2">
@@ -555,7 +554,7 @@ function Converter() {
                     checked={checked2}
                     onChange={() => setChecked2(!checked2)}
                   />
-                  <span>Show borders</span>
+                  <span>{translate("showBorders")}</span>
                 </label>
               </div>
             </div>
@@ -570,14 +569,13 @@ function Converter() {
                     min="1"
                     class="validate"
                   />
-                  <label for="txtSizeMultiplier">
-                    SVG size multiplier
-                    <i
-                      class="material-icons tooltipped"
-                      data-tooltip="Increases the SVG size compared to the original image, useful when the labels don't fit inside the tiny segments"
-                    >
-                      info
-                    </i>
+                  <label
+                    for="txtSizeMultiplier"
+                    data-tip
+                    data-for="SVGSizeMultiplier"
+                  >
+                    {translate("SVGSizeMultiplier")}
+                    {tooltip("SVGSizeMultiplier")}
                   </label>
                 </div>
               </div>
@@ -591,14 +589,13 @@ function Converter() {
                     min="1"
                     max="100"
                   />
-                  <label for="txtLabelFontSize">
-                    Label font size
-                    <i
-                      class="material-icons tooltipped"
-                      data-tooltip="Font size of the color number labels in each facet, in percentage relative to the largest circle found inside a facet."
-                    >
-                      info
-                    </i>
+                  <label
+                    for="txtLabelFontSize"
+                    data-tip
+                    data-for="labelFontSize"
+                  >
+                    {translate("labelFontSize")}
+                    {tooltip("labelFontSize")}
                   </label>
                 </div>
               </div>
@@ -610,14 +607,13 @@ function Converter() {
                     type="text"
                     defaultValue="#000"
                   />
-                  <label for="txtLabelFontColor">
-                    Label font color
-                    <i
-                      class="material-icons tooltipped"
-                      data-tooltip="Font color of the color number labels in each facet"
-                    >
-                      info
-                    </i>
+                  <label
+                    for="txtLabelFontColor"
+                    data-tip
+                    data-for="labelFontColor"
+                  >
+                    {translate("labelFontColor")}
+                    {tooltip("labelFontColor")}
                   </label>
                 </div>
               </div>
@@ -634,12 +630,12 @@ function Converter() {
             <div class="row">
               <div class="col s3">
                 <a1 class="waves-effect waves-light btn" id="btnDownloadSVG">
-                  Download SVG
+                  {translate("downloadSVG")}
                 </a1>
               </div>
               <div class="col s3">
                 <a1 class="waves-effect waves-light btn" id="btnDownloadPNG">
-                  Download PNG
+                  {translate("downloadPNG")}
                 </a1>
               </div>
               <div class="col s3">
@@ -647,7 +643,7 @@ function Converter() {
                   class="waves-effect waves-light btn"
                   id="btnDownloadPalettePNG"
                 >
-                  Download palette
+                  {translate("downloadPalette")}
                 </a1>
               </div>
             </div>
@@ -664,6 +660,6 @@ function Converter() {
       </div>
     </div>
   );
-}
+};
 
 export default Converter;

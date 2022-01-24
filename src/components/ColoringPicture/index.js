@@ -3,8 +3,11 @@ import Palette from "./palette";
 import "../../styles/style.css";
 import { Button } from "react-bootstrap";
 
+import translate from "../../i18n/translate";
+
 
 class ColoringPicture extends Component {
+
   constructor(props) {
     super(props);
     // Refs info from: https://reactjs.org/docs/refs-and-the-dom.html
@@ -239,8 +242,8 @@ class ColoringPicture extends Component {
     if (this.state.imageLoaded) {
       this.canvas = this.myRef.current;
 
-      var MAX_WIDTH = 1100;
-      var MAX_HEIGHT = 900;
+      var MAX_WIDTH = 900;
+      var MAX_HEIGHT = 700;
       var width = this.img.width;
       var height = this.img.height;
 
@@ -284,8 +287,7 @@ class ColoringPicture extends Component {
         <div class="row">
           <h2> </h2>
           <span>
-            Paste from clipboard (ctrl+v) to change the image (or browse for a
-            file{" "}
+            {translate("inputFile")}{" "}
             <input
               name="imageLoader"
               type="file"

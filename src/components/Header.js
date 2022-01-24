@@ -6,7 +6,26 @@ import { AiOutlineClose } from "react-icons/ai";
 import classes from "./Header.module.scss";
 import { Link, useHistory } from "react-router-dom";
 
+import translate from "../i18n/translate";
+import { useDispatch } from "react-redux";
+import { setLanguage } from "../reducers/languageReducer";
+import { LOCALES } from "../i18n";
+
+import ToggleSwitch from "../components/ToggleSwitch/ToggleSwitch";
+
 const Header = () => {
+  const dispatch = useDispatch();
+
+  const setEnLanguage = () => {
+    dispatch(setLanguage(LOCALES.ENGLISH));
+    localStorage.setItem('language', LOCALES.ENGLISH);
+  };
+  
+  const setRuLanguage = () => {
+    dispatch(setLanguage(LOCALES.RUSSIAN));
+    localStorage.setItem('language', LOCALES.RUSSIAN);
+  };
+
   const history = useHistory();
   const [menuOpen, setMenuOpen] = useState(false);
   const [size, setSize] = useState({
@@ -45,7 +64,7 @@ const Header = () => {
     <header className={classes.header}>
       <div className={classes.header__content}>
         <Link to="/" className={classes.header__content__logo}>
-          Paint by number generator
+        {translate("projectName")}
         </Link>
         <nav
           className={`${classes.header__content__nav} ${
@@ -55,21 +74,24 @@ const Header = () => {
           <ul>
             <li>
               <a href="/converter" onClick={menuToggleHandler}>
-                Конвертер
+              {translate("generator")}
               </a>
             </li>
             <li>
-              <a href="/сoloring-a-picture" onClick={menuToggleHandler}>
-                Раскрашивание картины
-              </a>
+              <Link to="/сoloring-a-picture" onClick={menuToggleHandler}>
+              {translate("coloringPicture")}
+              </Link>
             </li>
             <li>
               <Link to="/page-three" onClick={menuToggleHandler}>
-                Корзина
+              {translate("shoppingCart")}
               </Link>
             </li>
           </ul>
-          <button onClick={ctaClickHandler}>Авторизация</button>
+          <button onClick={ctaClickHandler}>{translate("authorization")}</button>
+          <button onClick={setEnLanguage}>En</button>
+          <button onClick={setRuLanguage}>Ru</button>
+          <ToggleSwitch label=" "/>
         </nav>
         <div className={classes.header__content__toggle}>
           {!menuOpen ? (

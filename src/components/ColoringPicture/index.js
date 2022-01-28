@@ -5,9 +5,7 @@ import { Button } from "react-bootstrap";
 
 import translate from "../../i18n/translate";
 
-
 class ColoringPicture extends Component {
-
   constructor(props) {
     super(props);
     // Refs info from: https://reactjs.org/docs/refs-and-the-dom.html
@@ -199,7 +197,7 @@ class ColoringPicture extends Component {
 
   removeEvent() {
     const { events, ...rest } = this.state.picture;
-    events.pop();
+    events?.pop();
 
     this.setState({
       picture: {
@@ -220,22 +218,23 @@ class ColoringPicture extends Component {
     });
   }
 
-  fillAlpha(ctx, bgColor){  // bgColor is a valid CSS color ctx is 2d context
+  fillAlpha(ctx, bgColor) {
+    // bgColor is a valid CSS color ctx is 2d context
     // save state
     ctx.save();
     // make sure defaults are set
     ctx.globalAlpha = 1;
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.filter = "none";
- 
+
     // fill transparent pixels with bgColor
     ctx.globalCompositeOperation = "destination-over";
     ctx.fillStyle = bgColor;
     ctx.fillRect(0, 0, ctx.canvas.width, ctx.canvas.height);
- 
+
     // cleanup
     ctx.restore();
- }
+  }
 
   render() {
     //check if image loaded before drawing the canvas
@@ -267,7 +266,7 @@ class ColoringPicture extends Component {
         //get the context API
         this.ctx = this.canvas.getContext("2d");
 
-        this.fillAlpha(this.ctx, "white")
+        this.fillAlpha(this.ctx, "white");
 
         //copy image pixels to the canvas
         this.ctx.drawImage(this.img, 0, 0, width, height);
@@ -304,13 +303,13 @@ class ColoringPicture extends Component {
             onUndoMove={this.removeEvent}
           />
 
-              <canvas
-                className="canvas"
-                id="canvas"
-                ref={this.myRef}
-                onClick={this.handleFilling}
-              />
-          
+          <canvas
+            className="canvas"
+            id="canvas"
+            ref={this.myRef}
+            onClick={this.handleFilling}
+          />
+
           <div className="delete-save">
             <label className="save-pic">
               Picture Name:

@@ -6,7 +6,8 @@
     width: 75px;
     display: inline-block;
     text-align: left;
-    top: 8px;
+    top: 13px;
+    margin-left: 50px;
     }
     .checkbox2 {
     display: none;
@@ -36,13 +37,13 @@
     box-sizing: border-box;
     }
     .inner:before {
-    content: "En";
+    content: "Ru";
     padding-left: 10px;
     background-color: rgb(13, 51, 155);
     color: #fff;
     }
     .inner:after {
-    content: "Ru";
+    content: "En";
     padding-right: 10px;
     background-color: rgb(13, 51, 155);
     color: #fff;

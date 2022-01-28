@@ -7,25 +7,10 @@ import classes from "./Header.module.scss";
 import { Link, useHistory } from "react-router-dom";
 
 import translate from "../i18n/translate";
-import { useDispatch } from "react-redux";
-import { setLanguage } from "../reducers/languageReducer";
-import { LOCALES } from "../i18n";
 
 import ToggleSwitch from "../components/ToggleSwitch/ToggleSwitch";
 
 const Header = () => {
-  const dispatch = useDispatch();
-
-  const setEnLanguage = () => {
-    dispatch(setLanguage(LOCALES.ENGLISH));
-    localStorage.setItem('language', LOCALES.ENGLISH);
-  };
-  
-  const setRuLanguage = () => {
-    dispatch(setLanguage(LOCALES.RUSSIAN));
-    localStorage.setItem('language', LOCALES.RUSSIAN);
-  };
-
   const history = useHistory();
   const [menuOpen, setMenuOpen] = useState(false);
   const [size, setSize] = useState({
@@ -89,8 +74,6 @@ const Header = () => {
             </li>
           </ul>
           <button onClick={ctaClickHandler}>{translate("authorization")}</button>
-          <button onClick={setEnLanguage}>En</button>
-          <button onClick={setRuLanguage}>Ru</button>
           <ToggleSwitch label=" "/>
         </nav>
         <div className={classes.header__content__toggle}>

@@ -11,10 +11,70 @@ class ColoringPicture extends Component {
     // Refs info from: https://reactjs.org/docs/refs-and-the-dom.html
     this.myRef = React.createRef();
 
+    var standartPallete = [
+      "#000000",
+      "#343433",
+      "#4E4E4D",
+      "#676868",
+      "#979797",
+      "#CECCCC",
+      "#FFFFFF",
+      "#F7DAAF",
+      "#F7ED45",
+      "#FBEE34",
+      "#FCD55A",
+      "#FDD209",
+      "#FFCD37",
+      "#FDBE16",
+      "#F99B29",
+      "#F16A2D",
+      "#F37122",
+      "#EF463C",
+      "#F26F68",
+      "#EC2724",
+      "#931D1A",
+      "#A6322E",
+      "#B44426",
+      "#7D4829",
+      "#AD7229",
+      "#DB8D77",
+      "#E79D5D",
+      "#EC9342",
+      "#E4B07C",
+      "#E08C39",
+      "#DDA463",
+      "#BA9F53",
+      "#9D8223",
+      "#BACD3F",
+      "#68AF46",
+      "#69BD45",
+      "#53B948",
+      "#169E49",
+      "#05753C",
+      "#71CCDC",
+      "#188FCA",
+      "#3CBEB7",
+      "#3C75BA",
+      "#014159",
+      "#4454A4",
+      "#5A499E",
+      "#583E98",
+      "#6A449B",
+      "#905FA7",
+      "#8D52A1",
+      "#C196C5",
+      "#DD64A5",
+      "#E0398C",
+      "#DB778D",
+    ];
+
     this.state = {
       imageLoaded: false,
       picture: {},
       currentColor: "",
+      colors: standartPallete,
+      standartPallete: standartPallete,
+      inputValue: "",
     };
 
     this.getPicture = this.getPicture.bind(this);
@@ -24,9 +84,46 @@ class ColoringPicture extends Component {
     this.floodFill = this.floodFill.bind(this);
     this.removeEvent = this.removeEvent.bind(this);
     this.savePicture = this.savePicture.bind(this);
-    this.deletePicture = this.deletePicture.bind(this);
     this.handleName = this.handleName.bind(this);
-    // this.drawImageScaled = this.drawImageScaled.bind(this);
+    this.loadTheLastPalleteAndPicture =
+      this.loadTheLastPalleteAndPicture.bind(this);
+    this.updateInputValue = this.updateInputValue.bind(this);
+    this.loadTheStandartPallete = this.loadTheStandartPallete.bind(this);
+  }
+
+  rgb2hex(r, g, b) {
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  }
+
+  loadTheLastPalleteAndPicture() {
+    if (localStorage.getItem("lastPictureColors") !== null) {
+      //Load pallete
+      const pallete = JSON.parse(localStorage.getItem("lastPictureColors"));
+
+      for (let i = 0; i < pallete.length; i++) {
+        pallete[i] = this.rgb2hex(pallete[i][0], pallete[i][1], pallete[i][2]);
+      }
+
+      this.setState({ colors: pallete });
+
+      //Load picture
+      const svgUrl = localStorage.getItem("lastPictureImg");
+
+      this.setState({
+        picture: svgUrl,
+      });
+
+      this.img = new Image();
+      this.img.src = svgUrl;
+
+      this.img.onload = () => {
+        this.setState({ imageLoaded: true });
+      };
+    }
+  }
+
+  loadTheStandartPallete() {
+    this.setState({ colors: this.state.standartPallete });
   }
 
   getPicture = (event) => {
@@ -44,25 +141,24 @@ class ColoringPicture extends Component {
     }
   };
 
-  async savePicture() {
-    //get id from url
-    const key = this.props.match.params.id;
-    const picture = this.state.picture;
-    //request to firebase to do patch picture
-    await this.props.firebase.doSavePicture(key, picture, (result) => {
-      if (result) {
-        window.alert("Picture saved successfully!", "success");
-      }
+  updateInputValue(event) {
+    this.setState({
+      inputValue: event.target.value,
     });
   }
 
-  async deletePicture() {
-    //get id from url
-    const key = this.props.match.params.id;
-    //request to firebase to do delete picture
-    await this.props.firebase.doDeletePicture(key, () => {
-      this.props.history.push("/");
-    });
+  async savePicture() {
+    if (this.state.imageLoaded) {
+      var dataURL = this.canvas.toDataURL("image/jpeg");
+      var link = document.createElement("a");
+      link.href = dataURL;
+      link.download =
+        (this.state.inputValue !== "" ? this.state.inputValue : "MyImage") +
+        ".jpg";
+      link.click();
+    } else {
+      alert(translate("imageNotLoaded"));
+    }
   }
 
   handleColor(color) {
@@ -208,14 +304,13 @@ class ColoringPicture extends Component {
   }
 
   handleName(event) {
-    const { name, ...rest } = this.state.picture;
-
     this.setState({
       picture: {
         name: event.target.value,
-        ...rest,
       },
     });
+
+    return this.state.picture.name;
   }
 
   fillAlpha(ctx, bgColor) {
@@ -301,6 +396,7 @@ class ColoringPicture extends Component {
           <Palette
             onSelectColor={this.handleColor}
             onUndoMove={this.removeEvent}
+            onPallete={this.state.colors}
           />
 
           <canvas
@@ -310,16 +406,35 @@ class ColoringPicture extends Component {
             onClick={this.handleFilling}
           />
 
+          <div>
+            <br />
+          </div>
+
+          <div className="delete-save">
+            <Button type="text" onClick={this.loadTheLastPalleteAndPicture}>
+              {translate("loadLatestImage")}
+            </Button>
+            <Button type="text" onClick={this.loadTheStandartPallete}>
+              {translate("loadStandardPalette")}
+            </Button>
+          </div>
+
+          <div>
+            <br />
+            <br />
+          </div>
+
           <div className="delete-save">
             <label className="save-pic">
-              Picture Name:
+              {translate("pictureName")}:
               <input
                 type="text"
                 placeholder={this.state.picture.name}
-                onChange={this.handleName}
+                value={this.state.inputValue}
+                onChange={this.updateInputValue}
               />
               <Button type="text" onClick={this.savePicture}>
-                Save
+                {translate("save")}
               </Button>
             </label>
           </div>

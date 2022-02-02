@@ -3121,9 +3121,12 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
         });
     }
     exports.process = process;
+
     function updateOutput() {
         return __awaiter(this, void 0, void 0, function* () {
             if (processResult != null) {
+                localStorage.setItem("lastPictureColors", JSON.stringify(processResult.colorsByIndex));
+
                 const showLabels = $("#chkShowLabels").prop("checked");
                 const fill = $("#chkFillFacets").prop("checked");
                 const stroke = $("#chkShowBorders").prop("checked");
@@ -3144,6 +3147,18 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
                 $("#palette .color").tooltip();
                 $(".status").removeClass("active");
                 $(".status.SVGGenerate").addClass("complete");
+
+
+                if ($("#svgContainer svg").length > 0) {
+                    const svgEl = $("#svgContainer svg").get(0);
+                    svgEl.setAttribute("xmlns", "http://www.w3.org/2000/svg");
+                    const svgData = svgEl.outerHTML;
+                    const preface = '<?xml version="1.0" standalone="no"?>\r\n';
+                    const svgBlob = new Blob([preface, svgData], { type: "image/svg+xml;charset=utf-8" });
+                    const svgUrl = URL.createObjectURL(svgBlob);
+   
+                    localStorage.setItem("lastPictureImg", svgUrl);
+                }
             }
         });
     }
@@ -3160,6 +3175,7 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
         if (processResult == null) {
             return;
         }
+
         const colorsByIndex = processResult.colorsByIndex;
         const canvas = document.createElement("canvas");
         const nrOfItemsPerRow = 10;

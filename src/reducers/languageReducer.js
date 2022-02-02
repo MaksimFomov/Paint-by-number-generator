@@ -3,7 +3,7 @@ import { LOCALES } from "../i18n";
 const SET_LANGUAGE = "SET_LANGUAGE";
 
 const defaultState = {
-  language: LOCALES.ENGLISH,
+  language: LOCALES.RUSSIAN,
 };
 
 export default function reposReducer(state = defaultState, action) {

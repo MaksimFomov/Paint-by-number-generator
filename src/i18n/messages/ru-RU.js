@@ -69,10 +69,15 @@ export default {
     labelFontColor: 'Цвет шрифта цифр',
     labelFontColorInfo: 'Цвет шрифта меток числа цветов в каждой границе',
     downloadSVG: 'Скачать SVG',
-    DownloadPNG: 'Скачать PNG',
-    DownloadPalette: 'Скачать палитру',
+    downloadPNG: 'Скачать PNG',
+    downloadPalette: 'Скачать палитру',
 
     //Coloring picture
-    currentColor: 'Текущий цвет'
+    currentColor: 'Текущий цвет',
+    loadLatestImage: 'Загрузить последнее изображение',
+    loadStandardPalette: 'Загрузить страндартную палитру',
+    pictureName: 'Имя изображения',
+    save: 'Сохранить',
+    imageNotLoaded: 'Изображение не загружено!'
   },
 };

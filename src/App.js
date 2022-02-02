@@ -10,9 +10,16 @@ import { I18nProvider } from "./i18n";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setLanguage } from "./reducers/languageReducer";
+import { LOCALES } from "./i18n";
 
 function App() {
   const dispatch = useDispatch();
+
+  if (localStorage.getItem('language') === null) {
+    dispatch(setLanguage(LOCALES.RUSSIAN));
+    localStorage.setItem("language", LOCALES.RUSSIAN);
+  }
+
   dispatch(setLanguage(localStorage.getItem('language')));
   const language = useSelector(state => state.repos.language);
 

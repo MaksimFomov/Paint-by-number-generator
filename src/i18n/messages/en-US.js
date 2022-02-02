@@ -73,6 +73,11 @@ export default {
     downloadPalette: 'Download palette',
 
     //Coloring picture
-    currentColor: 'Current Color'
+    currentColor: 'Current Color',
+    loadLatestImage: 'Load latest image',
+    loadStandardPalette: 'Load standard palette',
+    pictureName: 'Picture name',
+    save: 'Save',
+    imageNotLoaded: 'Image not loaded!'
   },
 };

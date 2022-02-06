@@ -96,7 +96,7 @@ class ColoringPicture extends Component {
   }
 
   loadTheLastPalleteAndPicture() {
-    if (localStorage.getItem("lastPictureColors") !== null) {
+    if (localStorage.getItem("lastPictureColors") !== null && localStorage.getItem("lastPictureImg") !== null) {
       //Load pallete
       const pallete = JSON.parse(localStorage.getItem("lastPictureColors"));
 
@@ -119,6 +119,9 @@ class ColoringPicture extends Component {
       this.img.onload = () => {
         this.setState({ imageLoaded: true });
       };
+    }
+    else {
+      alert("Последняя картинка или палитра не найдена, попробуйте сгенерировать картинку.");
     }
   }
 

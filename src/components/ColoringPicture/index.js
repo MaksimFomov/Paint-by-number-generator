@@ -96,16 +96,10 @@ class ColoringPicture extends Component {
   }
 
   loadTheLastPalleteAndPicture() {
-    if (localStorage.getItem("lastPictureColors") !== null && localStorage.getItem("lastPictureImg") !== null) {
-      //Load pallete
-      const pallete = JSON.parse(localStorage.getItem("lastPictureColors"));
-
-      for (let i = 0; i < pallete.length; i++) {
-        pallete[i] = this.rgb2hex(pallete[i][0], pallete[i][1], pallete[i][2]);
-      }
-
-      this.setState({ colors: pallete });
-
+    if (
+      localStorage.getItem("lastPictureColors") !== null &&
+      localStorage.getItem("lastPictureImg") !== null
+    ) {
       //Load picture
       const svgUrl = localStorage.getItem("lastPictureImg");
 
@@ -118,10 +112,27 @@ class ColoringPicture extends Component {
 
       this.img.onload = () => {
         this.setState({ imageLoaded: true });
+
+        //Load pallete
+        const pallete = JSON.parse(localStorage.getItem("lastPictureColors"));
+
+        for (let i = 0; i < pallete.length; i++) {
+          pallete[i] = this.rgb2hex(
+            pallete[i][0],
+            pallete[i][1],
+            pallete[i][2]
+          );
+        }
+
+        this.setState({ colors: pallete });
       };
-    }
-    else {
-      alert("Последняя картинка или палитра не найдена, попробуйте сгенерировать картинку.");
+      this.img.onerror = () => {
+        alert("Картинка не найдена, сгенерируйте новую!");
+      };
+    } else {
+      alert(
+        "Последняя картинка или палитра не найдена, попробуйте сгенерировать картинку."
+      );
     }
   }
 

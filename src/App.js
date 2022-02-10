@@ -3,7 +3,6 @@ import Layout from "./components/Layout";
 import { Switch, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import PageThree from "./pages/PageThree";
-import PageCTA from "./pages/PageCTA";
 import Converter from "./Converter";
 import ColoringPicture from "./components/ColoringPicture";
 import { I18nProvider } from "./i18n";
@@ -11,6 +10,8 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 import { setLanguage } from "./reducers/languageReducer";
 import { LOCALES } from "./i18n";
+import Authorization from "./pages/Authentication/Authorization";
+import Registration from "./pages/Authentication/Registration";
 
 function App() {
   const dispatch = useDispatch();
@@ -39,8 +40,11 @@ function App() {
           <Route path="/page-three">
             <PageThree />
           </Route>
-          <Route path="/page-cta">
-            <PageCTA />
+          <Route path="/authorization">
+            <Authorization />
+          </Route>
+          <Route path="/registration">
+            <Registration />
           </Route>
         </Switch>
       </Layout>

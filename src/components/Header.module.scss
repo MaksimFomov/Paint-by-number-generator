@@ -11,7 +11,7 @@
     transition: 0.3s ease all;
 
     &__content {
-        overflow: hidden;
+        overflow: visible;
         color: $light;
         margin: 0 auto;
         max-width: 1920px;

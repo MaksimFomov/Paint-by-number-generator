@@ -68,9 +68,12 @@ function DropdownMenu() {
           ) : null}
           {currentUser != null ? (
             <DropdownItem>
-              <Link onClick={handleLogout}>
-                Выйти
-              </Link>
+              <Link to="/my-image" onClick={menuToggleHandler}>Мои картины</Link>
+            </DropdownItem>
+          ) : null}
+          {currentUser != null ? (
+            <DropdownItem>
+              <Link onClick={handleLogout}>Выйти</Link>
             </DropdownItem>
           ) : null}
           {currentUser == null ? (
@@ -141,4 +144,4 @@ function DropdownMenu() {
   );
 }
 
-export default DropdownMenu;
+export default DropdownMenu

@@ -2,7 +2,7 @@
   display: flex;
   justify-content: center;
   flex-direction: column;
-  background-color: #ccc;
+  background-color: white;
   padding-top: 20px;
 }
 
@@ -45,7 +45,7 @@
   margin: 0 auto;
   display: flex;
   justify-content: center;
-  background-color: #ccc;
+  background-color: white;
   margin:auto;
   list-style-type:none;
   text-align:center;

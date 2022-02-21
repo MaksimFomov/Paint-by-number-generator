@@ -87,6 +87,8 @@ a {
   position: absolute;
   top: 58px;
   width: 300px;
+  margin-top: 10px;
+  margin-left: 100px;
   transform: translateX(-45%);
   background-color: var(--bg);
   border: var(--border);

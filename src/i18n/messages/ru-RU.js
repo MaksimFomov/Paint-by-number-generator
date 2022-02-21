@@ -78,6 +78,9 @@ export default {
     loadStandardPalette: 'Загрузить страндартную палитру',
     pictureName: 'Имя изображения',
     save: 'Сохранить',
-    imageNotLoaded: 'Изображение не загружено!'
+    imageNotLoaded: 'Изображение не загружено!',
+
+    //Dropdown menu
+    
   },
 };

@@ -1,109 +1,48 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 import "../styles/my-image.css";
+import { getDatabase, ref, onValue} from "firebase/database";
 
 function Myimage() {
-  var myImage = {
-    pictures: [
-      {
-        name: "Тест",
-        picture: "https://klike.net/uploads/posts/2019-05/1556708032_1.jpg",
-        pallete: ["#000000", "#343433", "#4E4E4D", "#676868", "#979797"],
-      },
-      {
-        name: "Жаба",
-        picture: "https://i.ibb.co/Ns6cjmr/paintbynumbers.png",
-        pallete: [
-          "#000000",
-          "#343433",
-          "#4E4E4D",
-          "#676868",
-          "#979797",
-          "#CECCCC",
-          "#FFFFFF",
-          "#F7DAAF",
-          "#F7ED45",
-          "#FBEE34",
-          "#FCD55A",
-        ],
-      },
-      {
-        name: "Жаба",
-        picture: "https://i.ibb.co/Ns6cjmr/paintbynumbers.png",
-        pallete: [
-          "#000000",
-          "#343433",
-          "#4E4E4D",
-          "#676868",
-          "#979797",
-          "#CECCCC",
-          "#FFFFFF",
-          "#F7DAAF",
-          "#F7ED45",
-          "#FBEE34",
-          "#FCD55A",
-        ],
-      },
-      {
-        name: "Тест",
-        picture: "https://klike.net/uploads/posts/2019-05/1556708032_1.jpg",
-        pallete: ["#000000", "#343433", "#4E4E4D", "#676868", "#979797"],
-      },
-      {
-        name: "Жаба",
-        picture: "https://i.ibb.co/Ns6cjmr/paintbynumbers.png",
-        pallete: [
-          "#000000",
-          "#343433",
-          "#4E4E4D",
-          "#676868",
-          "#979797",
-          "#CECCCC",
-          "#FFFFFF",
-          "#F7DAAF",
-          "#F7ED45",
-          "#FBEE34",
-          "#FCD55A",
-        ],
-      },
-      {
-        name: "Жаба",
-        picture: "https://i.ibb.co/Ns6cjmr/paintbynumbers.png",
-        pallete: [
-          "#000000",
-          "#343433",
-          "#4E4E4D",
-          "#676868",
-          "#979797",
-          "#CECCCC",
-          "#FFFFFF",
-          "#F7DAAF",
-          "#F7ED45",
-          "#FBEE34",
-          "#FCD55A",
-        ],
-      },
-    ],
-  };
-
   const availableSizes = [50, 65, 80];
 
-  const [activeSize, setActiveSize] = React.useState(0);
+  const [activeSize, setActiveSize] = useState(0);
 
   const onSelectSize = (index) => {
     setActiveSize(index);
   };
 
-  function ImageItem(props) {
+  const [picturesList, setPicturesList] = useState();
+
+  useEffect(() => {
+    const db = getDatabase();
+    const pictureRef = ref(db, 'pictures');
+    onValue(pictureRef, (snapshot) => {
+      console.log(snapshot.val());
+      const pictures = snapshot.val();
+      const picturesList = [];
+      for(let id in pictures) {
+        picturesList.push(pictures[id]);
+      }
+      setPicturesList(picturesList);
+    });
+  }, [])
+
+  function rgb2hex(r, g, b) {
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  }
+
+  function ImageItem({ picture }) {
     return (
       <div class="pizza-block">
-        <img class="pizza-block__image" src={props.img} alt="Pizza" />
-        <h4 class="pizza-block__title">{props.name}</h4>
+        <img class="pizza-block__image" src={picture.pictureImage} alt="Pizza" />
+        <h4 class="pizza-block__title">{picture.pictureName}</h4>
         <div className="swatchHolder">
           <ul>
-            {props.pallete.map((colour, index) => {
+            {picture.pallete.map((colour, index) => {
+              console.log(colour);
               return (
-                <li key={colour} style={{ backgroundColor: colour }}>
+                <li key={colour} style={{ backgroundColor: rgb2hex(colour[0], colour[1], colour[2]) }}>
                   {index}
                 </li>
               );
@@ -158,15 +97,11 @@ function Myimage() {
         <div class="container">
           <h2 class="content__title">Мои картины</h2>
           <div class="content__items">
-            {myImage.pictures.map((picture) => {
+            {picturesList ? picturesList.map((picture, index) => {
               return (
-                <ImageItem
-                  name={picture.name}
-                  img={picture.picture}
-                  pallete={picture.pallete}
-                />
+                <ImageItem picture={picture} key={index}/>
               );
-            })}
+            }) : <h1>Картины не найдены</h1>}
           </div>
         </div>
       </div>

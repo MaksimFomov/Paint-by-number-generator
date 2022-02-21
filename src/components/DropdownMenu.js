@@ -62,7 +62,7 @@ function DropdownMenu() {
           {currentUser != null ? (
             <DropdownItem>
               <Link to="/profile" onClick={menuToggleHandler}>
-                My Profile
+                {currentUser.email}
               </Link>
             </DropdownItem>
           ) : null}

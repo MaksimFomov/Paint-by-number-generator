@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
-import {getAuth, createUserWithEmailAndPassword,onAuthStateChanged, signOut, signInWithEmailAndPassword} from "firebase/auth";
+import { getDatabase } from "firebase/database";
+import {getAuth, createUserWithEmailAndPassword, onAuthStateChanged, signOut, signInWithEmailAndPassword} from "firebase/auth";
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 
@@ -11,6 +11,7 @@ import {getAuth, createUserWithEmailAndPassword,onAuthStateChanged, signOut, sig
 const firebaseConfig = {
   apiKey: "AIzaSyDE0cHHmZEkruP-zKDIe8In8V2fdCMOS0c",
   authDomain: "paint-by-number-generato-86a44.firebaseapp.com",
+  databaseURL: "https://paint-by-number-generato-86a44-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "paint-by-number-generato-86a44",
   storageBucket: "paint-by-number-generato-86a44.appspot.com",
   messagingSenderId: "402212630099",
@@ -19,9 +20,13 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
 // eslint-disable-next-line no-unused-vars
-const analytics = getAnalytics(app);
+const app = initializeApp(firebaseConfig);
+
+// eslint-disable-next-line no-unused-vars
+const database = getDatabase();
+
+// eslint-disable-next-line no-unused-vars
 const auth = getAuth();
 
 export function signup(email,passsword) {

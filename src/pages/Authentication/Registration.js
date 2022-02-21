@@ -2,8 +2,11 @@ import React, { useRef, useState } from "react";
 import { useAuth, signup } from "../../firebase";
 import "../../styles/authentification.css";
 import { Button } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
 
 const Registration = () => {
+  const history = useHistory();
+
   const emailRef = useRef();
   const passwordRef = useRef();
   const [loading, setLoading] = useState(false);
@@ -13,6 +16,8 @@ const Registration = () => {
     setLoading(true);
     try {
       await signup(emailRef.current.value, passwordRef.current.value);
+      alert("Успешная регистрация");
+      history.push("/home");
     } catch {
       alert("Такой аккаунт уже существует или неправильно введена почта!");
     }

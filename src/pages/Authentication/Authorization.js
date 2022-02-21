@@ -2,8 +2,11 @@ import React, { useRef, useState } from "react";
 import { useAuth, login } from "../../firebase";
 import "../../styles/authentification.css";
 import { Button } from "react-bootstrap";
+import { useHistory } from "react-router-dom";
 
 const Authorization = () => {
+  const history = useHistory();
+
   const emailRef = useRef();
   const passwordRef = useRef();
   const [loading, setLoading] = useState(false);
@@ -13,11 +16,12 @@ const Authorization = () => {
     setLoading(true);
     try {
       await login(emailRef.current.value, passwordRef.current.value);
+      alert("Успешная авторизация");
+      history.push("/home");
     } catch {
       alert("Проверьте введенные данные!");
     }
     setLoading(false);
-    console.log(currentUser);
   }
 
   return (

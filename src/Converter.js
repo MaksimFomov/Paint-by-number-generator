@@ -1,11 +1,11 @@
 import "./styles/lib/materialize.min.css";
 import "./styles/main.css";
-import { Link } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
 import React, { useState } from "react";
 import translate from "./i18n/translate";
 import { useAuth } from "./firebase";
-import { getDatabase, ref, set } from "firebase/database";
+import { getDatabase, ref, push, set } from "firebase/database";
 import { Button } from "react-bootstrap";
 
 const tooltip = (idTooltip) => {
@@ -18,6 +18,7 @@ const tooltip = (idTooltip) => {
 
 const Converter = () => {
   const currentUser = useAuth();
+  const history = useHistory();
 
   const [inputValue, setInputValue] = useState("");
 
@@ -33,23 +34,33 @@ const Converter = () => {
 
   const updateInputValue = (event) => {
     setInputValue(event.target.value);
-  }
+  };
 
   async function savePicture() {
-    if (currentUser == null) {
-      <Link to="/authorization"></Link>; //Не работает
-    } else {
-      const db = getDatabase();
-      const picture = {
-        userUID: currentUser.uid,
-        pictureName: inputValue !== "" ? inputValue : "MyImage",
-        pallete: JSON.parse(localStorage.getItem("lastPictureColors")),
-        pictureImage: localStorage.getItem("lastPictureImgFirebase"),
-      };
+    setInputValue("");
 
-      set(ref(db, "pictures/" + 1), picture);
+    if (currentUser == null) {
+      history.push("/authorization");
+    } else {
+      try {
+        const db = getDatabase();
+        const pictureListRef = ref(db, 'pictures');
+        const newPictureRef = push(pictureListRef);
+  
+        set(newPictureRef, {
+          userUID: currentUser.uid,
+          pictureName: inputValue !== "" ? inputValue : "MyImage",
+          pallete: JSON.parse(localStorage.getItem("lastPictureColors")),
+          pictureImage: localStorage.getItem("lastPictureImgFirebase"),
+        });
+
+        alert("Картинка сохранена в профиль");
+      }
+      catch(e) {
+        alert("Ошибка при сохранении картинки в профиль");
+      }
     }
-  };
+  }
 
   return (
     <div className="Converter">
@@ -673,21 +684,22 @@ const Converter = () => {
                 </a1>
               </div>
             </div>
-
+            <div class="row"></div>
             <div class="row">
-              <div class="col s3" style={{ marginRight: "0px" }}></div>
-              <div class="col s3">
+              <div class="input-field col s4">
                 <input
                   type="text"
                   value={inputValue}
                   onChange={updateInputValue}
                 />
+                <label style={{ marginLeft: "100px" }}>Введите название картинки</label>
               </div>
             </div>
             <div class="row">
-              <div class="col s3" style={{ marginRight: "0px" }}></div>
               <div class="col s3">
-                <Button onClick={savePicture}>Сохранить в профиль</Button>
+                <Button style={{ marginLeft: "83px" }} onClick={savePicture}>
+                  Сохранить в профиль
+                </Button>
               </div>
             </div>
           </div>

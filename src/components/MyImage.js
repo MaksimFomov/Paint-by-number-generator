@@ -2,8 +2,11 @@ import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 import "../styles/my-image.css";
 import { getDatabase, ref, onValue} from "firebase/database";
+import { useAuth } from "../firebase";
 
 function Myimage() {
+  const currentUser = useAuth();
+
   const availableSizes = [50, 65, 80];
 
   const [activeSize, setActiveSize] = useState(0);
@@ -18,15 +21,16 @@ function Myimage() {
     const db = getDatabase();
     const pictureRef = ref(db, 'pictures');
     onValue(pictureRef, (snapshot) => {
-      console.log(snapshot.val());
       const pictures = snapshot.val();
       const picturesList = [];
       for(let id in pictures) {
-        picturesList.push(pictures[id]);
+        if(pictures[id].userUID === currentUser?.uid) {
+          picturesList.push(pictures[id]);
+        }
       }
       setPicturesList(picturesList);
     });
-  }, [])
+  }, [currentUser?.uid])
 
   function rgb2hex(r, g, b) {
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
@@ -40,7 +44,6 @@ function Myimage() {
         <div className="swatchHolder">
           <ul>
             {picture.pallete.map((colour, index) => {
-              console.log(colour);
               return (
                 <li key={colour} style={{ backgroundColor: rgb2hex(colour[0], colour[1], colour[2]) }}>
                   {index}
@@ -71,7 +74,7 @@ function Myimage() {
         </div>
         <div class="pizza-block__bottom">
           <div class="pizza-block__price">395 Br</div>
-          <div class="button1 button--outline button--add">
+          <button class="button1 button--outline button--add">
             <svg
               width="12"
               height="12"
@@ -85,7 +88,20 @@ function Myimage() {
               />
             </svg>
             <span>Добавить в корзину</span>
-          </div>
+          </button>
+          <br/>
+          <br/>
+          <button class="button1 button--outline button--add">
+            <svg
+              width="12"
+              height="12"
+              viewBox="0 0 12 12"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+            </svg>
+            <span style={{ marginRight: "13px" }}>Раскрасить</span>
+          </button>
         </div>
       </div>
     );
@@ -101,7 +117,7 @@ function Myimage() {
               return (
                 <ImageItem picture={picture} key={index}/>
               );
-            }) : <h1>Картины не найдены</h1>}
+            }) : <h1>Картины загружаются или не найдены</h1>}
           </div>
         </div>
       </div>

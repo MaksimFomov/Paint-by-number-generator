@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import classNames from "classnames";
 import "../styles/my-image.css";
-import { getDatabase, ref, onValue} from "firebase/database";
+import { getDatabase, ref, onValue, set, update } from "firebase/database";
 import { useAuth } from "../firebase";
 
 function Myimage() {
@@ -19,18 +19,44 @@ function Myimage() {
 
   useEffect(() => {
     const db = getDatabase();
-    const pictureRef = ref(db, 'pictures');
+    const pictureRef = ref(db, "pictures");
     onValue(pictureRef, (snapshot) => {
       const pictures = snapshot.val();
       const picturesList = [];
-      for(let id in pictures) {
-        if(pictures[id].userUID === currentUser?.uid) {
-          picturesList.push(pictures[id]);
+      for (let id in pictures) {
+        if (pictures[id].userUID === currentUser?.uid) {
+          picturesList.push({ id, ...pictures[id] });
         }
       }
       setPicturesList(picturesList);
     });
-  }, [currentUser?.uid])
+  }, [currentUser?.uid]);
+
+  function removePicture(index) {
+    const db = getDatabase();
+    const pictureRef = ref(db, "pictures/" + index);
+    set(pictureRef, null);
+  }
+
+  function editPicture(picture) {
+    var pictureName = prompt("Введите новое имя");
+
+    if (pictureName) {
+      const db = getDatabase();
+
+      const pictureData = {
+        userUID: picture.userUID,
+        pictureName: pictureName,
+        pallete: picture.pallete,
+        pictureImage: picture.pictureImage,
+      };
+
+      const updates = {};
+      updates["/pictures/" + picture.id] = pictureData;
+
+      return update(ref(db), updates);
+    }
+  }
 
   function rgb2hex(r, g, b) {
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
@@ -39,13 +65,24 @@ function Myimage() {
   function ImageItem({ picture }) {
     return (
       <div class="pizza-block">
-        <img class="pizza-block__image" src={picture.pictureImage} alt="Pizza" />
         <h4 class="pizza-block__title">{picture.pictureName}</h4>
+        <button onClick={() => removePicture(picture.id)}>Удалить</button>
+        <button onClick={() => editPicture(picture)}>Изменить</button>
+        <img
+          class="pizza-block__image"
+          src={picture.pictureImage}
+          alt="Pizza"
+        />
         <div className="swatchHolder">
           <ul>
             {picture.pallete.map((colour, index) => {
               return (
-                <li key={colour} style={{ backgroundColor: rgb2hex(colour[0], colour[1], colour[2]) }}>
+                <li
+                  key={colour}
+                  style={{
+                    backgroundColor: rgb2hex(colour[0], colour[1], colour[2]),
+                  }}
+                >
                   {index}
                 </li>
               );
@@ -73,7 +110,13 @@ function Myimage() {
           </ul>
         </div>
         <div class="pizza-block__bottom">
-          <div class="pizza-block__price">395 Br</div>
+          <div class="pizza-block__price">
+            {activeSize === 0
+              ? "20 BYN"
+              : activeSize === 1
+              ? "25 BYN"
+              : "30 BYN"}
+          </div>
           <button class="button1 button--outline button--add">
             <svg
               width="12"
@@ -89,8 +132,8 @@ function Myimage() {
             </svg>
             <span>Добавить в корзину</span>
           </button>
-          <br/>
-          <br/>
+          <br />
+          <br />
           <button class="button1 button--outline button--add">
             <svg
               width="12"
@@ -98,8 +141,7 @@ function Myimage() {
               viewBox="0 0 12 12"
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
-            >
-            </svg>
+            ></svg>
             <span style={{ marginRight: "13px" }}>Раскрасить</span>
           </button>
         </div>
@@ -113,11 +155,13 @@ function Myimage() {
         <div class="container">
           <h2 class="content__title">Мои картины</h2>
           <div class="content__items">
-            {picturesList ? picturesList.map((picture, index) => {
-              return (
-                <ImageItem picture={picture} key={index}/>
-              );
-            }) : <h1>Картины загружаются или не найдены</h1>}
+            {picturesList ? (
+              picturesList.map((picture, index) => {
+                return <ImageItem picture={picture} key={index} />;
+              })
+            ) : (
+              <h1>Картины загружаются или не найдены</h1>
+            )}
           </div>
         </div>
       </div>

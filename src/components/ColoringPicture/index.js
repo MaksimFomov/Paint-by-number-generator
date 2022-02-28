@@ -2,8 +2,9 @@ import React, { Component } from "react";
 import Palette from "./palette";
 import "../../styles/style.css";
 import { Button } from "react-bootstrap";
-
 import translate from "../../i18n/translate";
+import { getDatabase, ref, set, get, child, push } from "firebase/database";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 class ColoringPicture extends Component {
   constructor(props) {
@@ -11,71 +12,57 @@ class ColoringPicture extends Component {
     // Refs info from: https://reactjs.org/docs/refs-and-the-dom.html
     this.myRef = React.createRef();
 
-    var standartPallete = [
-      "#000000",
-      "#343433",
-      "#4E4E4D",
-      "#676868",
-      "#979797",
-      "#CECCCC",
-      "#FFFFFF",
-      "#F7DAAF",
-      "#F7ED45",
-      "#FBEE34",
-      "#FCD55A",
-      "#FDD209",
-      "#FFCD37",
-      "#FDBE16",
-      "#F99B29",
-      "#F16A2D",
-      "#F37122",
-      "#EF463C",
-      "#F26F68",
-      "#EC2724",
-      "#931D1A",
-      "#A6322E",
-      "#B44426",
-      "#7D4829",
-      "#AD7229",
-      "#DB8D77",
-      "#E79D5D",
-      "#EC9342",
-      "#E4B07C",
-      "#E08C39",
-      "#DDA463",
-      "#BA9F53",
-      "#9D8223",
-      "#BACD3F",
-      "#68AF46",
-      "#69BD45",
-      "#53B948",
-      "#169E49",
-      "#05753C",
-      "#71CCDC",
-      "#188FCA",
-      "#3CBEB7",
-      "#3C75BA",
-      "#014159",
-      "#4454A4",
-      "#5A499E",
-      "#583E98",
-      "#6A449B",
-      "#905FA7",
-      "#8D52A1",
-      "#C196C5",
-      "#DD64A5",
-      "#E0398C",
-      "#DB778D",
-    ];
-
     this.state = {
       imageLoaded: false,
       picture: {},
       currentColor: "",
-      colors: standartPallete,
-      standartPallete: standartPallete,
+      colors: this.standartPallete,
+      standartPallete: this.standartPallete,
       inputValue: "",
+      userUID: "",
+      pictureId: "null",
+      checked: false,
     };
+
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userUid = user.uid;
+
+        this.setState({
+          userUID: userUid,
+        });
+
+        const dbRef = ref(getDatabase());
+        get(child(dbRef, "picturesForColoring/" + userUid))
+          .then((snapshot) => {
+            if (snapshot.exists()) {
+              const picture = snapshot.val();
+
+              this.setState({
+                picture: picture.pictureImage,
+              });
+
+              this.img = new Image();
+              this.img.src = picture.pictureImage;
+
+              this.img.onload = () => {
+                this.setState({ imageLoaded: true });
+                const pallete = picture.pallete;
+
+                this.setState({ colors: pallete });
+
+                this.setState({ pictureId: picture.pictureId });
+              };
+            } else {
+              console.log("No data available");
+            }
+          })
+          .catch((error) => {
+            console.error(error);
+          });
+      }
+    });
 
     this.getPicture = this.getPicture.bind(this);
     this.handleColor = this.handleColor.bind(this);
@@ -88,7 +75,76 @@ class ColoringPicture extends Component {
     this.loadTheLastPalleteAndPicture =
       this.loadTheLastPalleteAndPicture.bind(this);
     this.updateInputValue = this.updateInputValue.bind(this);
-    this.loadTheStandartPallete = this.loadTheStandartPallete.bind(this);
+    this.savePictureInMyPicture = this.savePictureInMyPicture.bind(this);
+  }
+
+  standartPallete = [
+    "#000000",
+    "#343433",
+    "#4E4E4D",
+    "#676868",
+    "#979797",
+    "#CECCCC",
+    "#FFFFFF",
+    "#F7DAAF",
+    "#F7ED45",
+    "#FBEE34",
+    "#FCD55A",
+    "#FDD209",
+    "#FFCD37",
+    "#FDBE16",
+    "#F99B29",
+    "#F16A2D",
+    "#F37122",
+    "#EF463C",
+    "#F26F68",
+    "#EC2724",
+    "#931D1A",
+    "#A6322E",
+    "#B44426",
+    "#7D4829",
+    "#AD7229",
+    "#DB8D77",
+    "#E79D5D",
+    "#EC9342",
+    "#E4B07C",
+    "#E08C39",
+    "#DDA463",
+    "#BA9F53",
+    "#9D8223",
+    "#BACD3F",
+    "#68AF46",
+    "#69BD45",
+    "#53B948",
+    "#169E49",
+    "#05753C",
+    "#71CCDC",
+    "#188FCA",
+    "#3CBEB7",
+    "#3C75BA",
+    "#014159",
+    "#4454A4",
+    "#5A499E",
+    "#583E98",
+    "#6A449B",
+    "#905FA7",
+    "#8D52A1",
+    "#C196C5",
+    "#DD64A5",
+    "#E0398C",
+    "#DB778D",
+  ];
+
+  getBase64Image(img) {
+    var canvas = document.createElement("canvas");
+    canvas.width = img.width;
+    canvas.height = img.height;
+
+    var ctx = canvas.getContext("2d");
+    ctx.drawImage(img, 0, 0);
+    var dataURL = canvas.toDataURL("image/png");
+
+    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
   }
 
   rgb2hex(r, g, b) {
@@ -125,8 +181,17 @@ class ColoringPicture extends Component {
         }
 
         this.setState({ colors: pallete });
+
+        this.setState({ pictureId: "null" });
+        const db = getDatabase();
+        set(ref(db, "picturesForColoring/" + this.state.userUID), {
+          pictureImage: localStorage.getItem("lastPictureImgFirebase"),
+          pictureId: this.state.pictureId,
+          pallete: pallete,
+        });
       };
       this.img.onerror = () => {
+        this.setState({ colors: this.standartPallete });
         alert("Картинка не найдена, сгенерируйте новую!");
       };
     } else {
@@ -136,8 +201,49 @@ class ColoringPicture extends Component {
     }
   }
 
-  loadTheStandartPallete() {
-    this.setState({ colors: this.state.standartPallete });
+  savePictureInMyPicture() {
+    const auth = getAuth();
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const userUid = user.uid;
+
+        const pictureName = prompt("Введите название картинки");
+
+        if (pictureName) {
+          const db = getDatabase();
+
+          const pallete = [];
+          for (let i = 0; i < this.state.colors.length; i++) {
+            pallete.push(this.convertHexToRGB(this.state.colors[i]));
+          }
+
+          if (this.state.pictureId === "null" || this.state.checked) {
+            const pictureListRef = ref(db, "pictures");
+            const newPictureRef = push(pictureListRef);
+
+            set(newPictureRef, {
+              userUID: userUid,
+              pictureName: pictureName,
+              pallete: pallete,
+              pictureImage: this.canvas.toDataURL("image/jpeg"),
+            });
+          } else {
+            set(ref(db, "pictures/" + this.state.pictureId), {
+              userUID: userUid,
+              pictureName: pictureName,
+              pallete: pallete,
+              pictureImage: this.canvas.toDataURL("image/jpeg"),
+            });
+          }
+
+          alert("Картинка сохранена в профиль");
+        } else {
+          alert("Вы не ввели имя");
+        }
+      } else {
+        alert("Вы не авторизованы");
+      }
+    });
   }
 
   getPicture = (event) => {
@@ -151,6 +257,23 @@ class ColoringPicture extends Component {
 
       this.img.onload = () => {
         this.setState({ imageLoaded: true });
+        this.setState({ colors: this.standartPallete });
+
+        this.setState({ pictureId: "null" });
+
+        var userUID = this.state.userUID;
+        var pictureId = this.state.pictureId;
+        var standartPallete = this.standartPallete;
+        var reader = new FileReader();
+        reader.readAsDataURL(event.target.files[0]);
+        reader.onload = function () {
+          const db = getDatabase();
+          set(ref(db, "picturesForColoring/" + userUID), {
+            pictureImage: reader.result,
+            pictureId: pictureId,
+            pallete: standartPallete,
+          });
+        };
       };
     }
   };
@@ -163,13 +286,14 @@ class ColoringPicture extends Component {
 
   async savePicture() {
     if (this.state.imageLoaded) {
-      var dataURL = this.canvas.toDataURL("image/jpeg");
-      var link = document.createElement("a");
-      link.href = dataURL;
-      link.download =
-        (this.state.inputValue !== "" ? this.state.inputValue : "MyImage") +
-        ".jpg";
-      link.click();
+      const pictureName = prompt("Введите имя изображения");
+      if (pictureName) {
+        var dataURL = this.canvas.toDataURL("image/jpeg");
+        var link = document.createElement("a");
+        link.href = dataURL;
+        link.download = pictureName + ".jpg";
+        link.click();
+      }
     } else {
       alert(translate("imageNotLoaded"));
     }
@@ -387,8 +511,21 @@ class ColoringPicture extends Component {
             this.floodFill(this.ctx, e.x, e.y, e.color, 128);
           }
         });
+
+        var picture = this.canvas.toDataURL("image/jpeg");
+
+        const db = getDatabase();
+        set(ref(db, "picturesForColoring/" + this.state.userUID), {
+          pictureImage: picture,
+          pallete: this.state.colors,
+          pictureId: this.state.pictureId,
+        });
       }
     }
+
+    const handleChange = () => {
+      this.setState({ checked: !this.state.checked });
+    };
 
     return (
       <div class="container">
@@ -428,9 +565,36 @@ class ColoringPicture extends Component {
             <Button type="text" onClick={this.loadTheLastPalleteAndPicture}>
               {translate("loadLatestImage")}
             </Button>
-            <Button type="text" onClick={this.loadTheStandartPallete}>
-              {translate("loadStandardPalette")}
+            <Button type="text" onClick={this.savePictureInMyPicture}>
+              {translate("savePictureInMyPicture")}
             </Button>
+          </div>
+
+          <div>
+            <br />
+          </div>
+
+          <div className="delete-save">
+            <label />
+            <label
+              style={{
+                display: this.state.pictureId === "null" ? "none" : "block",
+              }}
+            >
+              <input
+                id="chkNewImage"
+                type="checkbox"
+                checked={this.state.checked}
+                onChange={handleChange}
+              />
+              <span
+                data-tip
+                data-for="resizeImage"
+                style={{ marginLeft: "190px" }}
+              >
+                Сохранить, как новую
+              </span>
+            </label>
           </div>
 
           <div>
@@ -440,13 +604,6 @@ class ColoringPicture extends Component {
 
           <div className="delete-save">
             <label className="save-pic">
-              {translate("pictureName")}:
-              <input
-                type="text"
-                placeholder={this.state.picture.name}
-                value={this.state.inputValue}
-                onChange={this.updateInputValue}
-              />
               <Button type="text" onClick={this.savePicture}>
                 {translate("save")}
               </Button>

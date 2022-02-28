@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useHistory } from "react-router-dom";
 import classNames from "classnames";
 import "../styles/my-image.css";
 import { getDatabase, ref, onValue, set, update } from "firebase/database";
@@ -6,6 +7,8 @@ import { useAuth } from "../firebase";
 
 function Myimage() {
   const currentUser = useAuth();
+
+  const history = useHistory();
 
   const availableSizes = [50, 65, 80];
 
@@ -16,6 +19,10 @@ function Myimage() {
   };
 
   const [picturesList, setPicturesList] = useState();
+
+  function rgb2hex(r, g, b) {
+    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  }
 
   useEffect(() => {
     const db = getDatabase();
@@ -58,8 +65,23 @@ function Myimage() {
     }
   }
 
-  function rgb2hex(r, g, b) {
-    return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+  function colorizePicture(picture) {
+    for (let i = 0; i < picture.pallete.length; i++) {
+      picture.pallete[i] = rgb2hex(
+        picture.pallete[i][0],
+        picture.pallete[i][1],
+        picture.pallete[i][2]
+      );
+    }
+
+    const db = getDatabase();
+    set(ref(db, "picturesForColoring/" + picture.userUID), {
+      pictureId: picture.id,
+      pictureImage: picture.pictureImage,
+      pallete: picture.pallete,
+    });
+
+    history.push("/сoloring-a-picture");
   }
 
   function ImageItem({ picture }) {
@@ -134,7 +156,12 @@ function Myimage() {
           </button>
           <br />
           <br />
-          <button class="button1 button--outline button--add">
+          <button
+            class="button1 button--outline button--add"
+            onClick={() =>
+              colorizePicture(picture)
+            }
+          >
             <svg
               width="12"
               height="12"

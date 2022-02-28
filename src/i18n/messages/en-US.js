@@ -75,9 +75,9 @@ export default {
     //Coloring picture
     currentColor: 'Current Color',
     loadLatestImage: 'Load latest image',
-    loadStandardPalette: 'Load standard palette',
+    savePictureInMyPicture: 'Save picture to my pictures',
     pictureName: 'Picture name',
-    save: 'Save',
+    save: 'Save picture',
     imageNotLoaded: 'Image not loaded!'
   },
 };

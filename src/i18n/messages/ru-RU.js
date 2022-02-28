@@ -75,9 +75,9 @@ export default {
     //Coloring picture
     currentColor: 'Текущий цвет',
     loadLatestImage: 'Загрузить последнее изображение',
-    loadStandardPalette: 'Загрузить страндартную палитру',
+    savePictureInMyPicture: 'Сохранить картинку в мои картинки',
     pictureName: 'Имя изображения',
-    save: 'Сохранить',
+    save: 'Сохранить картинку на компьютер',
     imageNotLoaded: 'Изображение не загружено!',
 
     //Dropdown menu

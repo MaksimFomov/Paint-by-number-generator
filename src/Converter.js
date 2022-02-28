@@ -2,7 +2,7 @@ import "./styles/lib/materialize.min.css";
 import "./styles/main.css";
 import { useHistory } from "react-router-dom";
 import ReactTooltip from "react-tooltip";
-import React, { useState } from "react";
+import React from "react";
 import translate from "./i18n/translate";
 import { useAuth } from "./firebase";
 import { getDatabase, ref, push, set } from "firebase/database";
@@ -20,8 +20,6 @@ const Converter = () => {
   const currentUser = useAuth();
   const history = useHistory();
 
-  const [inputValue, setInputValue] = useState("");
-
   const [checked, setChecked] = React.useState(true);
   const [checked1, setChecked1] = React.useState(true);
   const [checked2, setChecked2] = React.useState(true);
@@ -32,31 +30,32 @@ const Converter = () => {
   const [checked7, setChecked7] = React.useState(true);
   const [checked8, setChecked8] = React.useState(false);
 
-  const updateInputValue = (event) => {
-    setInputValue(event.target.value);
-  };
-
   async function savePicture() {
-    setInputValue("");
-
     if (currentUser == null) {
       history.push("/authorization");
     } else {
       try {
-        const db = getDatabase();
-        const pictureListRef = ref(db, 'pictures');
-        const newPictureRef = push(pictureListRef);
-  
-        set(newPictureRef, {
-          userUID: currentUser.uid,
-          pictureName: inputValue !== "" ? inputValue : "MyImage",
-          pallete: JSON.parse(localStorage.getItem("lastPictureColors")),
-          pictureImage: localStorage.getItem("lastPictureImgFirebase"),
-        });
+        const pictureName = prompt("Введите название картинки");
 
-        alert("Картинка сохранена в профиль");
+        if(pictureName){
+          const db = getDatabase();
+          const pictureListRef = ref(db, 'pictures');
+          const newPictureRef = push(pictureListRef);
+    
+          set(newPictureRef, {
+            userUID: currentUser.uid,
+            pictureName: pictureName,
+            pallete: JSON.parse(localStorage.getItem("lastPictureColors")),
+            pictureImage: localStorage.getItem("lastPictureImgFirebase"),
+          });
+  
+          alert("Картинка сохранена в профиль");
+        }
+        else {
+          alert("Вы не ввели имя");
+        }
       }
-      catch(e) {
+      catch {
         alert("Ошибка при сохранении картинки в профиль");
       }
     }
@@ -686,18 +685,9 @@ const Converter = () => {
             </div>
             <div class="row"></div>
             <div class="row">
-              <div class="input-field col s4">
-                <input
-                  type="text"
-                  value={inputValue}
-                  onChange={updateInputValue}
-                />
-                <label style={{ marginLeft: "100px" }}>Введите название картинки</label>
-              </div>
-            </div>
-            <div class="row">
+            <div class="col s3"></div>
               <div class="col s3">
-                <Button style={{ marginLeft: "83px" }} onClick={savePicture}>
+                <Button onClick={savePicture}>
                   Сохранить в профиль
                 </Button>
               </div>

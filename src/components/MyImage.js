@@ -56,6 +56,7 @@ function Myimage() {
         pictureName: pictureName,
         pallete: picture.pallete,
         pictureImage: picture.pictureImage,
+        cleanPicture: picture.cleanPicture,
       };
 
       const updates = {};
@@ -79,19 +80,41 @@ function Myimage() {
       pictureId: picture.id,
       pictureImage: picture.pictureImage,
       pallete: picture.pallete,
+      cleanPicture: picture.cleanPicture,
     });
 
     history.push("/сoloring-a-picture");
   }
 
+  function addToCart(picture) {
+    for (let i = 0; i < picture.pallete.length; i++) {
+      picture.pallete[i] = rgb2hex(
+        picture.pallete[i][0],
+        picture.pallete[i][1],
+        picture.pallete[i][2]
+      );
+    }
+
+    const db = getDatabase();
+    set(ref(db, "cart/" + picture.id), {
+      userUID: picture.userUID,
+      pictureName: picture.pictureName,
+      pictureImage: picture.pictureImage,
+      pallete: picture.pallete,
+      size: activeSize
+    });
+
+    alert("Картина добавлена в корзину")
+  }
+
   function ImageItem({ picture }) {
     return (
-      <div class="pizza-block">
-        <h4 class="pizza-block__title">{picture.pictureName}</h4>
+      <div className="pizza-block">
+        <h4 className="pizza-block__title">{picture.pictureName}</h4>
         <button onClick={() => removePicture(picture.id)}>Удалить</button>
         <button onClick={() => editPicture(picture)}>Изменить</button>
         <img
-          class="pizza-block__image"
+          className="pizza-block__image"
           src={picture.pictureImage}
           alt="Pizza"
         />
@@ -112,7 +135,7 @@ function Myimage() {
           </ul>
         </div>
         <br />
-        <div class="pizza-block__selector">
+        <div className="pizza-block__selector">
           <ul>
             <a1>Размер холста(диагональ)</a1>
           </ul>
@@ -123,7 +146,7 @@ function Myimage() {
                 onClick={() => onSelectSize(index)}
                 className={classNames({
                   active: activeSize === index,
-                  disabled: !availableSizes.includes(size),
+                  disabled: !availableSizes.includes(size)
                 })}
               >
                 {size} см.
@@ -131,15 +154,15 @@ function Myimage() {
             ))}
           </ul>
         </div>
-        <div class="pizza-block__bottom">
-          <div class="pizza-block__price">
+        <div className="pizza-block__bottom">
+          <div className="pizza-block__price">
             {activeSize === 0
               ? "20 BYN"
               : activeSize === 1
               ? "25 BYN"
               : "30 BYN"}
           </div>
-          <button class="button1 button--outline button--add">
+          <button style={{ display: picture.cleanPicture ? "brhbfhr" : "none"}} className="button1 button--outline button--add" onClick={() => addToCart(picture)}>
             <svg
               width="12"
               height="12"
@@ -157,7 +180,7 @@ function Myimage() {
           <br />
           <br />
           <button
-            class="button1 button--outline button--add"
+            className="button1 button--outline button--add"
             onClick={() =>
               colorizePicture(picture)
             }
@@ -177,11 +200,11 @@ function Myimage() {
   }
 
   return (
-    <div class="wrapper">
-      <div class="content">
-        <div class="container">
-          <h2 class="content__title">Мои картины</h2>
-          <div class="content__items">
+    <div className="wrapper">
+      <div className="content">
+        <div className="container">
+          <h2 className="content__title">Мои картины</h2>
+          <div className="content__items">
             {picturesList ? (
               picturesList.map((picture, index) => {
                 return <ImageItem picture={picture} key={index} />;

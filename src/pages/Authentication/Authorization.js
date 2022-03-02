@@ -25,14 +25,14 @@ const Authorization = () => {
   }
 
   return (
-    <div class="body">
-      <div class="main">
-        <div class="circle"></div>
-        <div class="register-form-container">
+    <div className="body">
+      <div className="main">
+        <div className="circle"></div>
+        <div className="register-form-container">
           <form action="">
-            <h1 class="form-title">Авторизация</h1>
-            <div class="form-fields">
-              <div class="form-field">
+            <h1 className="form-title">Авторизация</h1>
+            <div className="form-fields">
+              <div className="form-field">
                 <input
                   type="email"
                   placeholder="Почта"
@@ -40,7 +40,7 @@ const Authorization = () => {
                   ref={emailRef}
                 />
               </div>
-              <div class="form-field">
+              <div className="form-field">
                 <input
                   type="password"
                   placeholder="Пароль"
@@ -51,9 +51,9 @@ const Authorization = () => {
                 />
               </div>
             </div>
-            <div class="form-buttons">
+            <div className="form-buttons">
               <Button
-                class="button"
+                className="button"
                 disabled={loading || currentUser != null}
                 onClick={handleLogin}
               >

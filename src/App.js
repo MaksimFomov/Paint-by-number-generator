@@ -12,6 +12,8 @@ import { LOCALES } from "./i18n";
 import Authorization from "./pages/Authentication/Authorization";
 import Registration from "./pages/Authentication/Registration";
 import Myimage from "./components/MyImage";
+import ShoppingCart from "./pages/ShoppingCart";
+import Cart from "./pages/Cart";
 
 function App() {
   const dispatch = useDispatch();
@@ -37,7 +39,9 @@ function App() {
           <Route path="/сoloring-a-picture">
             <ColoringPicture />
           </Route>
-          <Route path="/shopping-cart"></Route>
+          <Route path="/shopping-cart">
+            <Cart/>
+          </Route>
           <Route path="/authorization">
             <Authorization />
           </Route>

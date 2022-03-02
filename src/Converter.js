@@ -47,6 +47,7 @@ const Converter = () => {
             pictureName: pictureName,
             pallete: JSON.parse(localStorage.getItem("lastPictureColors")),
             pictureImage: localStorage.getItem("lastPictureImgFirebase"),
+            cleanPicture: true,
           });
   
           alert("Картинка сохранена в профиль");
@@ -63,8 +64,8 @@ const Converter = () => {
 
   return (
     <div className="Converter">
-      <div class="container">
-        <div class="row">
+      <div className="container">
+        <div className="row">
           <h2> </h2>
           <span>
             {translate("inputFile")}{" "}
@@ -91,30 +92,30 @@ const Converter = () => {
             </a>
           </span>
         </div>
-        <div class="row">
-          <div class="col s12">
-            <ul class="tabs">
-              <li class="tab col s2">
+        <div className="row">
+          <div className="col s12">
+            <ul className="tabs">
+              <li className="tab col s2">
                 <a href="#input-pane">{translate("input")}</a>
               </li>
-              <li class="tab col s2">
+              <li className="tab col s2">
                 <a href="#options-pane">{translate("options")}</a>
               </li>
             </ul>
           </div>
-          <div id="input-pane" class="col s12">
+          <div id="input-pane" className="col s12">
             <canvas id="canvas"></canvas>
             <img
               id="imgTrivial"
               alt="Trivial"
-              crossorigin="anonymous"
+              crossOrigin="anonymous"
               src="https://i.imgur.com/o5CqO57.png"
               style={{ display: "none" }}
             />
             <img
               id="imgSmall"
               alt="Small"
-              crossorigin="anonymous"
+              crossOrigin="anonymous"
               src="https://i.imgur.com/YgYLDGP.png"
               style={{ display: "none" }}
             />
@@ -122,17 +123,17 @@ const Converter = () => {
             <img
               id="imgMedium"
               alt="Medium"
-              crossorigin="anonymous"
+              crossOrigin="anonymous"
               src="https://i.imgur.com/nLeNgYbr.jpg"
               style={{ display: "none" }}
             />
           </div>
 
-          <div id="options-pane" class="col s12">
-            <ul class="collection">
-              <li class="collection-item">
-                <div class="row">
-                  <div class="col s3" style={{ marginTop: "34px" }}>
+          <div id="options-pane" className="col s12">
+            <ul className="collection">
+              <li className="collection-item">
+                <div className="row">
+                  <div className="col s3" style={{ marginTop: "34px" }}>
                     <label>
                       <input
                         id="chkResizeImage"
@@ -146,40 +147,40 @@ const Converter = () => {
                       </span>
                     </label>
                   </div>
-                  <div class="col s2">
-                    <label for="txtResizeWidth">{translate("width")}</label>
+                  <div className="col s2">
+                    <label htmlFor="txtResizeWidth">{translate("width")}</label>
                     <input
                       id="txtResizeWidth"
                       type="number"
                       defaultValue="1024"
                       min="1"
-                      class="validate"
+                      className="validate"
                     />
                   </div>
-                  <div class="col s2">
-                    <label for="txtResizeHeight">{translate("height")}</label>
+                  <div className="col s2">
+                    <label htmlFor="txtResizeHeight">{translate("height")}</label>
                     <input
                       id="txtResizeHeight"
                       type="number"
                       defaultValue="1024"
                       min="1"
-                      class="validate"
+                      className="validate"
                     />
                   </div>
                 </div>
               </li>
-              <li class="collection-item">
-                <div class="row">
-                  <div class="input-field col s2">
+              <li className="collection-item">
+                <div className="row">
+                  <div className="input-field col s2">
                     <input
                       id="txtNrOfClusters"
                       type="number"
                       defaultValue="16"
                       min="1"
-                      class="validate"
+                      className="validate"
                     />
                     <label
-                      for="txtClusterPrecision"
+                      htmlFor="txtClusterPrecision"
                       data-tip
                       data-for="numberOfColors"
                     >
@@ -188,17 +189,17 @@ const Converter = () => {
                     </label>
                   </div>
 
-                  <div class="input-field col s2">
+                  <div className="input-field col s2">
                     <input
                       id="txtClusterPrecision"
                       type="number"
                       defaultValue="1"
                       min="1"
                       step="0.05"
-                      class="validate"
+                      className="validate"
                     />
                     <label
-                      for="txtClusterPrecision"
+                      htmlFor="txtClusterPrecision"
                       data-tip
                       data-for="clusterPrecision"
                     >
@@ -207,31 +208,31 @@ const Converter = () => {
                     </label>
                   </div>
 
-                  <div class="input-field col s2">
+                  <div className="input-field col s2">
                     <input
                       id="txtRandomSeed"
                       type="number"
                       defaultValue="0"
                       min="0"
                       step="1"
-                      class="validate"
+                      className="validate"
                     />
-                    <label for="txtRandomSeed" data-tip data-for="randomSeed">
+                    <label htmlFor="txtRandomSeed" data-tip data-for="randomSeed">
                       {translate("randomSeed")}
                       {tooltip("randomSeed")}
                     </label>
                   </div>
                 </div>
               </li>
-              <li class="collection-item">
-                <div class="row">
-                  <div class="col s3">
+              <li className="collection-item">
+                <div className="row">
+                  <div className="col s3">
                     <label data-tip data-for="clusteringColorSpace">
                       {translate("clusteringColorSpace")}
                       {tooltip("clusteringColorSpace")}
                     </label>
                   </div>
-                  <div class="col s2">
+                  <div className="col s2">
                     <label>
                       <input
                         id="optColorSpaceRGB"
@@ -243,7 +244,7 @@ const Converter = () => {
                       <span>RGB</span>
                     </label>
                   </div>
-                  <div class="col s2">
+                  <div className="col s2">
                     <label>
                       <input
                         id="optColorSpaceHSL"
@@ -255,7 +256,7 @@ const Converter = () => {
                       <span>HSL</span>
                     </label>
                   </div>
-                  <div class="col s2">
+                  <div className="col s2">
                     <label>
                       <input
                         id="optColorSpaceLAB"
@@ -268,9 +269,9 @@ const Converter = () => {
                     </label>
                   </div>
 
-                  <div class="col s12">
+                  <div className="col s12">
                     <label
-                      for="txtKMeansColorRestrictions"
+                      htmlFor="txtKMeansColorRestrictions"
                       data-tip
                       data-for="restrictClusteringColors"
                     >
@@ -286,25 +287,26 @@ const Converter = () => {
                     </label>
                     <textarea
                       id="txtKMeansColorRestrictions"
-                      class="materialize-textarea validate"
+                      className="materialize-textarea validate"
+                      defaultValue="/0,0,0 /255,255,255"
                     >
-                      /0,0,0 /255,255,255
+                      
                     </textarea>
                   </div>
                 </div>
               </li>
-              <li class="collection-item">
-                <div class="row">
-                  <div class="input-field col s4">
+              <li className="collection-item">
+                <div className="row">
+                  <div className="input-field col s4">
                     <input
                       id="txtNarrowPixelStripCleanupRuns"
                       type="number"
                       defaultValue="3"
                       min="0"
-                      class="validate"
+                      className="validate"
                     />
                     <label
-                      for="txtNarrowPixelStripCleanupRuns"
+                      htmlFor="txtNarrowPixelStripCleanupRuns"
                       data-tip
                       data-for="numberOfRuns"
                     >
@@ -312,16 +314,16 @@ const Converter = () => {
                       {tooltip("numberOfRuns")}
                     </label>
                   </div>
-                  <div class="input-field col s4">
+                  <div className="input-field col s4">
                     <input
                       id="txtRemoveFacetsSmallerThan"
                       type="number"
                       defaultValue="20"
                       min="1"
-                      class="validate"
+                      className="validate"
                     />
                     <label
-                      for="txtRemoveFacetsSmallerThan"
+                      htmlFor="txtRemoveFacetsSmallerThan"
                       data-tip
                       data-for="removeSmallFacets"
                     >
@@ -329,16 +331,16 @@ const Converter = () => {
                       {tooltip("removeSmallFacets")}
                     </label>
                   </div>
-                  <div class="input-field col s4">
+                  <div className="input-field col s4">
                     <input
                       id="txtMaximumNumberOfFacets"
                       type="number"
                       defaultValue="100000"
                       min="1"
-                      class="validate"
+                      className="validate"
                     />
                     <label
-                      for="txtMaximumNumberOfFacets"
+                      htmlFor="txtMaximumNumberOfFacets"
                       data-tip
                       data-for="maximumNumberOfFacets"
                     >
@@ -347,16 +349,16 @@ const Converter = () => {
                     </label>
                   </div>
                 </div>
-                <div class="row">
-                  <div class="input-field col s6">
-                    <div class="row">
-                      <div class="col s4">
+                <div className="row">
+                  <div className="input-field col s6">
+                    <div className="row">
+                      <div className="col s4">
                         <label data-tip data-for="smallFacetRemovalOrder">
                           {translate("smallFacetRemovalOrder")}
                           {tooltip("smallFacetRemovalOrder")}
                         </label>
                       </div>
-                      <div class="col s4">
+                      <div className="col s4">
                         <label>
                           <input
                             id="optFacetRemovalLargestToSmallest"
@@ -368,7 +370,7 @@ const Converter = () => {
                           <span>{translate("largestToSmallest")}</span>
                         </label>
                       </div>
-                      <div class="col s4">
+                      <div className="col s4">
                         <label>
                           <input
                             id="optFacetRemovalSmallestToLargest"
@@ -384,18 +386,18 @@ const Converter = () => {
                   </div>
                 </div>
               </li>
-              <li class="collection-item">
-                <div class="row">
-                  <div class="input-field col s5">
+              <li className="collection-item">
+                <div className="row">
+                  <div className="input-field col s5">
                     <input
                       id="txtNrOfTimesToHalveBorderSegments"
                       type="number"
                       defaultValue="2"
                       min="0"
-                      class="validate"
+                      className="validate"
                     />
                     <label
-                      for="txtNrOfTimesToHalveBorderSegments"
+                      htmlFor="txtNrOfTimesToHalveBorderSegments"
                       data-tip
                       data-for="amountOfTimes"
                     >
@@ -415,95 +417,95 @@ const Converter = () => {
             </ul>
           </div>
 
-          <div class="col s12">
-            <a1 class="waves-effect waves-light btn" id="btnProcess">
+          <div className="col s12">
+            <label className="waves-effect waves-light btn" id="btnProcess">
               {translate("processImage")}
-            </a1>
+            </label>
           </div>
         </div>
 
-        <div class="row">
-          <div class="col s2">
-            <div class="status kMeans">
+        <div className="row">
+          <div className="col s2">
+            <div className="status kMeans">
               {translate("kMeansClustering")}
-              <div class="progress">
+              <div className="progress">
                 <div
                   id="statusKMeans"
-                  class="determinate"
+                  className="determinate"
                   style={{ width: "0%" }}
                 ></div>
               </div>
             </div>
           </div>
-          <div class="col s2">
-            <div class="status facetBuilding">
+          <div className="col s2">
+            <div className="status facetBuilding">
               {translate("facetBuilding")}
-              <div class="progress">
+              <div className="progress">
                 <div
                   id="statusFacetBuilding"
-                  class="determinate"
+                  className="determinate"
                   style={{ width: "0%" }}
                 ></div>
               </div>
             </div>
           </div>
-          <div class="col s2">
-            <div class="status facetReduction">
+          <div className="col s2">
+            <div className="status facetReduction">
               {translate("smallFacetPruning")}
-              <div class="progress">
+              <div className="progress">
                 <div
                   id="statusFacetReduction"
-                  class="determinate"
+                  className="determinate"
                   style={{ width: "0%" }}
                 ></div>
               </div>
             </div>
           </div>
-          <div class="col s2">
-            <div class="status facetBorderPath">
+          <div className="col s2">
+            <div className="status facetBorderPath">
               {translate("borderDetection")}
-              <div class="progress">
+              <div className="progress">
                 <div
                   id="statusFacetBorderPath"
-                  class="determinate"
+                  className="determinate"
                   style={{ width: "0%" }}
                 ></div>
               </div>
             </div>
           </div>
-          <div class="col s2">
-            <div class="status facetBorderSegmentation">
+          <div className="col s2">
+            <div className="status facetBorderSegmentation">
               {translate("borderSegmentation")}
-              <div class="progress">
+              <div className="progress">
                 <div
                   id="statusFacetBorderSegmentation"
-                  class="determinate"
+                  className="determinate"
                   style={{ width: "0%" }}
                 ></div>
               </div>
             </div>
           </div>
-          <div class="col s2">
-            <div class="status facetLabelPlacement">
+          <div className="col s2">
+            <div className="status facetLabelPlacement">
               {translate("labelPlacement")}
-              <div class="progress">
+              <div className="progress">
                 <div
                   id="statusFacetLabelPlacement"
-                  class="determinate"
+                  className="determinate"
                   style={{ width: "0%" }}
                 ></div>
               </div>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col s2">
-            <div class="status SVGGenerate">
+        <div className="row">
+          <div className="col s2">
+            <div className="status SVGGenerate">
               {translate("SVGGeneration")}
-              <div class="progress">
+              <div className="progress">
                 <div
                   id="statusSVGGenerate"
-                  class="determinate"
+                  className="determinate"
                   style={{ width: "0%" }}
                 ></div>
               </div>
@@ -511,56 +513,56 @@ const Converter = () => {
           </div>
         </div>
 
-        <div class="row">
-          <div class="col s12">
-            <ul id="tabsOutput" class="tabs">
-              <li class="tab col s2">
+        <div className="row">
+          <div className="col s12">
+            <ul id="tabsOutput" className="tabs">
+              <li className="tab col s2">
                 <a href="#kmeans-pane">{translate("quantizedImage")}e</a>
               </li>
-              <li class="tab col s2">
+              <li className="tab col s2">
                 <a href="#reduction-pane">{translate("facetReduction")}</a>
               </li>
-              <li class="tab col s2">
+              <li className="tab col s2">
                 <a href="#borderpath-pane">{translate("borderTracing")}</a>
               </li>
-              <li class="tab col s2">
+              <li className="tab col s2">
                 <a href="#bordersegmentation-pane">
                   {translate("borderSegmentation")}
                 </a>
               </li>
-              <li class="tab col s2">
+              <li className="tab col s2">
                 <a href="#labelplacement-pane">{translate("labelPlacement")}</a>
               </li>
-              <li class="tab col s2">
+              <li className="tab col s2">
                 <a href="#output-pane">{translate("output")}</a>
               </li>
-              <li class="tab col s2">
+              <li className="tab col s2">
                 <a href="#log-pane">{translate("log")}</a>
               </li>
             </ul>
           </div>
-          <div id="kmeans-pane" class="col s12">
+          <div id="kmeans-pane" className="col s12">
             <canvas id="cKMeans"></canvas>
           </div>
-          <div id="reduction-pane" class="col s12">
+          <div id="reduction-pane" className="col s12">
             <canvas id="cReduction"></canvas>
           </div>
-          <div id="borderpath-pane" class="col s12">
+          <div id="borderpath-pane" className="col s12">
             <canvas id="cBorderPath"></canvas>
           </div>
-          <div id="bordersegmentation-pane" class="col s12">
+          <div id="bordersegmentation-pane" className="col s12">
             <canvas id="cBorderSegmentation"></canvas>
           </div>
-          <div id="labelplacement-pane" class="col s12">
+          <div id="labelplacement-pane" className="col s12">
             <canvas id="cLabelPlacement"></canvas>
           </div>
 
-          <div id="output-pane" class="col s12">
-            <div class="row">
-              <div class="col s2">
+          <div id="output-pane" className="col s12">
+            <div className="row">
+              <div className="col s2">
                 <label>{translate("SVGRenderOptions")}</label>
               </div>
-              <div class="col s2">
+              <div className="col s2">
                 <label>
                   <input
                     id="chkShowLabels"
@@ -571,7 +573,7 @@ const Converter = () => {
                   <span>{translate("showLabels")}</span>
                 </label>
               </div>
-              <div class="col s2">
+              <div className="col s2">
                 <label>
                   <input
                     id="chkFillFacets"
@@ -582,7 +584,7 @@ const Converter = () => {
                   <span>{translate("fillFacets")}</span>
                 </label>
               </div>
-              <div class="col s2">
+              <div className="col s2">
                 <label>
                   <input
                     id="chkShowBorders"
@@ -594,19 +596,19 @@ const Converter = () => {
                 </label>
               </div>
             </div>
-            <div class="row">
-              <div class="col s3">
-                <div class="input-field">
+            <div className="row">
+              <div className="col s3">
+                <div className="input-field">
                   <input
                     placeholder="SVG Size multiplier"
                     id="txtSizeMultiplier"
                     type="number"
                     defaultValue="1"
                     min="1"
-                    class="validate"
+                    className="validate"
                   />
                   <label
-                    for="txtSizeMultiplier"
+                    htmlFor="txtSizeMultiplier"
                     data-tip
                     data-for="SVGSizeMultiplier"
                   >
@@ -615,8 +617,8 @@ const Converter = () => {
                   </label>
                 </div>
               </div>
-              <div class="col s3">
-                <div class="input-field">
+              <div className="col s3">
+                <div className="input-field">
                   <input
                     placeholder="Label font size"
                     id="txtLabelFontSize"
@@ -626,7 +628,7 @@ const Converter = () => {
                     max="100"
                   />
                   <label
-                    for="txtLabelFontSize"
+                    htmlFor="txtLabelFontSize"
                     data-tip
                     data-for="labelFontSize"
                   >
@@ -635,8 +637,8 @@ const Converter = () => {
                   </label>
                 </div>
               </div>
-              <div class="col s3">
-                <div class="input-field">
+              <div className="col s3">
+                <div className="input-field">
                   <input
                     placeholder="Label font size"
                     id="txtLabelFontColor"
@@ -644,7 +646,7 @@ const Converter = () => {
                     defaultValue="#000"
                   />
                   <label
-                    for="txtLabelFontColor"
+                    htmlFor="txtLabelFontColor"
                     data-tip
                     data-for="labelFontColor"
                   >
@@ -654,39 +656,39 @@ const Converter = () => {
                 </div>
               </div>
             </div>
-            <div class="row">
-              <div id="palette" class="palette"></div>
+            <div className="row">
+              <div id="palette" className="palette"></div>
             </div>
-            <div class="row">
-              <div class="col s12">
+            <div className="row">
+              <div className="col s12">
                 <div id="svgContainer"></div>
               </div>
             </div>
 
-            <div class="row">
-              <div class="col s3">
-                <a1 class="waves-effect waves-light btn" id="btnDownloadSVG">
+            <div className="row">
+              <div className="col s3">
+                <label className="waves-effect waves-light btn" id="btnDownloadSVG">
                   {translate("downloadSVG")}
-                </a1>
+                </label>
               </div>
-              <div class="col s3">
-                <a1 class="waves-effect waves-light btn" id="btnDownloadPNG">
+              <div className="col s3">
+                <label className="waves-effect waves-light btn" id="btnDownloadPNG">
                   {translate("downloadPNG")}
-                </a1>
+                </label>
               </div>
-              <div class="col s3">
-                <a1
-                  class="waves-effect waves-light btn"
+              <div className="col s3">
+                <label
+                  className="waves-effect waves-light btn"
                   id="btnDownloadPalettePNG"
                 >
                   {translate("downloadPalette")}
-                </a1>
+                </label>
               </div>
             </div>
-            <div class="row"></div>
-            <div class="row">
-            <div class="col s3"></div>
-              <div class="col s3">
+            <div className="row"></div>
+            <div className="row">
+            <div className="col s3"></div>
+              <div className="col s3">
                 <Button onClick={savePicture}>
                   Сохранить в профиль
                 </Button>
@@ -694,9 +696,9 @@ const Converter = () => {
             </div>
           </div>
 
-          <div id="log-pane" class="col s12">
-            <div class="row">
-              <div class="col s12">
+          <div id="log-pane" className="col s12">
+            <div className="row">
+              <div className="col s12">
                 <div id="log"></div>
               </div>
             </div>

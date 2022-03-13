@@ -3156,14 +3156,8 @@ define("gui", ["require", "exports", "common", "guiprocessmanager", "settings"],
                     const preface = '<?xml version="1.0" standalone="no"?>\r\n';
                     const svgBlob = new Blob([preface, svgData], { type: "image/svg+xml;charset=utf-8" });
                     const svgUrl = URL.createObjectURL(svgBlob);
-                    
+
                     localStorage.setItem("lastPictureImg", svgUrl);
-                    var reader = new FileReader();
-                    reader.readAsDataURL(svgBlob);
-                    reader.onloadend = function () {
-                        var base64data = reader.result;
-                        localStorage.setItem("lastPictureImgFirebase", base64data);
-                    };
                 }
             }
         });

@@ -10,6 +10,10 @@ function Myimage() {
 
   const history = useHistory();
 
+  if (currentUser === null) {
+    history.push("/authorization");
+  }
+
   const availableSizes = [50, 65, 80];
 
   const [activeSize, setActiveSize] = useState(0);
@@ -101,17 +105,19 @@ function Myimage() {
       pictureName: picture.pictureName,
       pictureImage: picture.pictureImage,
       pallete: picture.pallete,
-      size: activeSize
+      size: activeSize,
+      quantity: 1,
+      price: activeSize === 0 ? 20 : activeSize === 1 ? 25 : 30,
     });
 
-    alert("Картина добавлена в корзину")
+    alert("Картина добавлена в корзину");
   }
 
   function ImageItem({ picture }) {
     return (
       <div className="pizza-block">
         <h4 className="pizza-block__title">{picture.pictureName}</h4>
-        <button onClick={() => removePicture(picture.id)}>Удалить</button>
+        <button style={{ marginRight: "30px" }} onClick={() => removePicture(picture.id)}>Удалить</button>
         <button onClick={() => editPicture(picture)}>Изменить</button>
         <img
           className="pizza-block__image"
@@ -146,7 +152,7 @@ function Myimage() {
                 onClick={() => onSelectSize(index)}
                 className={classNames({
                   active: activeSize === index,
-                  disabled: !availableSizes.includes(size)
+                  disabled: !availableSizes.includes(size),
                 })}
               >
                 {size} см.
@@ -162,7 +168,11 @@ function Myimage() {
               ? "25 BYN"
               : "30 BYN"}
           </div>
-          <button style={{ display: picture.cleanPicture ? "brhbfhr" : "none"}} className="button1 button--outline button--add" onClick={() => addToCart(picture)}>
+          <button
+            style={{ display: picture.cleanPicture ? "brhbfhr" : "none" }}
+            className="button1 button--outline button--add"
+            onClick={() => addToCart(picture)}
+          >
             <svg
               width="12"
               height="12"
@@ -181,9 +191,7 @@ function Myimage() {
           <br />
           <button
             className="button1 button--outline button--add"
-            onClick={() =>
-              colorizePicture(picture)
-            }
+            onClick={() => colorizePicture(picture)}
           >
             <svg
               width="12"

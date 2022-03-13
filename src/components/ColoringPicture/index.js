@@ -49,6 +49,7 @@ class ColoringPicture extends Component {
 
               this.img.onload = () => {
                 this.setState({ imageLoaded: true });
+
                 const pallete = picture.pallete;
 
                 this.setState({ colors: pallete });
@@ -138,23 +139,26 @@ class ColoringPicture extends Component {
     "#DB778D",
   ];
 
-  getBase64Image(img) {
-    var canvas = document.createElement("canvas");
-    canvas.width = img.width;
-    canvas.height = img.height;
+  b64toBlob(dataURI) {
+    var byteString = atob(dataURI.split(",")[1]);
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
 
-    var ctx = canvas.getContext("2d");
-    ctx.drawImage(img, 0, 0);
-    var dataURL = canvas.toDataURL("image/png");
-
-    return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+    for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    return new Blob([ab], { type: "image/jpeg" });
   }
 
   rgb2hex(r, g, b) {
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
   }
 
-  loadTheLastPalleteAndPicture() {
+  async loadTheLastPalleteAndPicture() {
+    let blob = await fetch(localStorage.getItem("lastPictureImg")).then((r) =>
+      r.blob()
+    );
+
     if (
       localStorage.getItem("lastPictureColors") !== null &&
       localStorage.getItem("lastPictureImg") !== null
@@ -190,13 +194,25 @@ class ColoringPicture extends Component {
         if (this.state.userUID !== "") {
           this.setState({ pictureId: "null" });
           const db = getDatabase();
-          set(ref(db, "picturesForColoring/" + this.state.userUID), {
-            pictureImage: localStorage.getItem("lastPictureImgFirebase"),
-            pictureId: this.state.pictureId,
-            pallete: pallete,
-            cleanPicture: false,
-          });
+
+          let userUID = this.state.userUID;
+          let pictureId = this.state.pictureId;
+
+          var reader = new FileReader();
+          reader.readAsDataURL(blob);
+          reader.onloadend = function () {
+            var base64data = reader.result;
+            set(ref(db, "picturesForColoring/" + userUID), {
+              pictureImage: base64data,
+              pictureId: pictureId,
+              pallete: pallete,
+              cleanPicture: false,
+            });
+          };
         }
+
+        localStorage.removeItem("lastPictureColors");
+        localStorage.removeItem("lastPictureImg");
       };
       this.img.onerror = () => {
         this.setState({ colors: this.standartPallete });
@@ -541,6 +557,7 @@ class ColoringPicture extends Component {
           pictureImage: picture,
           pallete: this.state.colors,
           pictureId: this.state.pictureId,
+          cleanPicture: this.state.cleanPicture,
         });
       }
     }
@@ -553,7 +570,7 @@ class ColoringPicture extends Component {
       <div className="container">
         <div className="row">
           <h2> </h2>
-          <span>
+          <span style={{ marginLeft: "200px" }}>
             {translate("inputFile")}{" "}
             <input
               name="imageLoader"

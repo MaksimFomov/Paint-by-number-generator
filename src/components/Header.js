@@ -80,7 +80,7 @@ const Header = () => {
               </Link>
             </li>
           </ul>
-          <NavItem text="Мой профиль" icon={<CaretIcon />}>
+          <NavItem text={translate("myProfile")} icon={<CaretIcon />}>
             <DropdownMenu />
           </NavItem>
           <ToggleSwitch label=" " />

@@ -17,7 +17,7 @@ const Authorization = () => {
     try {
       await login(emailRef.current.value, passwordRef.current.value);
       alert("Успешная авторизация");
-      history.push("/home");
+      history.push("/");
     } catch {
       alert("Проверьте введенные данные!");
     }
@@ -58,6 +58,13 @@ const Authorization = () => {
                 onClick={handleLogin}
               >
                 Авторизация
+              </Button>
+              <p>.</p>
+              <Button
+                className="button"
+                onClick={() => history.push("/reset-password")}
+              >
+                Восстановить пароль
               </Button>
             </div>
           </form>

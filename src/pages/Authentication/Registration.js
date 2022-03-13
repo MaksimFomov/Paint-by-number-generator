@@ -17,7 +17,7 @@ const Registration = () => {
     try {
       await signup(emailRef.current.value, passwordRef.current.value);
       alert("Успешная регистрация");
-      history.push("/home");
+      history.push("/");
     } catch {
       alert("Такой аккаунт уже существует или неправильно введена почта!");
     }
@@ -32,15 +32,6 @@ const Registration = () => {
           <form action="">
             <h1 className="form-title">Регистрация</h1>
             <div className="form-fields">
-              <div className="form-field">
-                <input
-                  type="text"
-                  placeholder="Имя"
-                  required
-                  pattern="[а-яА-Я]+"
-                  title="Имя может содержать только буквы."
-                />
-              </div>
               <div className="form-field">
                 <input
                   type="email"

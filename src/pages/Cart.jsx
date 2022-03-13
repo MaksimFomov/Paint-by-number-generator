@@ -3,8 +3,13 @@ import { FiMinusCircle } from "@react-icons/all-files/fi/FiMinusCircle";
 import { FiPlusCircle } from "@react-icons/all-files/fi/FiPlusCircle";
 import styled from "styled-components";
 import { mobile } from "../responsive";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, set, update } from "firebase/database";
 import { useAuth } from "../firebase";
+import { useHistory } from "react-router-dom";
+import StripeCheckout from "react-stripe-checkout";
+import translate from "../i18n/translate";
+
+const KEY = process.env.REACT_APP_STRIPE;
 
 const Container = styled.div``;
 
@@ -16,23 +21,6 @@ const Wrapper = styled.div`
 const Title = styled.h1`
   font-weight: 300;
   text-align: center;
-`;
-
-const Top = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 20px;
-`;
-
-const TopButton = styled.button`
-  padding: 10px;
-  font-weight: 600;
-  cursor: pointer;
-  border: ${(props) => props.type === "filled" && "none"};
-  background-color: ${(props) =>
-    props.type === "filled" ? "black" : "transparent"};
-  color: ${(props) => props.type === "filled" && "white"};
 `;
 
 const Bottom = styled.div`
@@ -61,6 +49,7 @@ const Image = styled.img`
 `;
 
 const Details = styled.div`
+  width: 500px;
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -115,7 +104,7 @@ const Summary = styled.div`
   border: 0.5px solid lightgray;
   border-radius: 10px;
   padding: 20px;
-  height: 50vh;
+  height: 40vh;
 `;
 
 const SummaryTitle = styled.h1`
@@ -142,37 +131,118 @@ const Button = styled.button`
   font-weight: 600;
 `;
 
+const ButtonDelete = styled.button`
+  width: 100%;
+  padding: 10px;
+  background-color: white;
+  color: black;
+  font-weight: 500;
+  border: 4px solid black;
+  border-radius: 25px;
+`;
+
 const Cart = () => {
   const currentUser = useAuth();
+  const history = useHistory();
+
+  if (currentUser === null) {
+    history.push("/authorization");
+  }
 
   const [picturesList, setPicturesList] = useState();
+
+  const [totalPrice, setTotalPrice] = useState();
+
+  const [quantityPictures, setQuantityPictures] = useState();
+
+  const [stripeToken, setStripeToken] = useState(null);
+
+  const onToken = (token) => {
+    setStripeToken(token);
+  };
+
+  console.log(stripeToken);
 
   useEffect(() => {
     const db = getDatabase();
     const pictureRef = ref(db, "cart");
+
     onValue(pictureRef, (snapshot) => {
       const pictures = snapshot.val();
       const picturesList = [];
+      const totalPrice = [];
       for (let id in pictures) {
         if (pictures[id].userUID === currentUser?.uid) {
           picturesList.push({ id, ...pictures[id] });
+
+          totalPrice.push(pictures[id].price * pictures[id].quantity);
         }
       }
       setPicturesList(picturesList);
+
+      let price = totalPrice.reduce(function (sum, elem) {
+        return sum + elem;
+      }, 0);
+      setTotalPrice(price);
+
+      setQuantityPictures(totalPrice.length);
     });
   }, [currentUser?.uid]);
+
+  function removePicture(index) {
+    const db = getDatabase();
+    const pictureRef = ref(db, "cart/" + index);
+    set(pictureRef, null);
+  }
+
+  function decreaseInQuantity(picture) {
+    const db = getDatabase();
+
+    const pictureData = {
+      userUID: picture.userUID,
+      pictureName: picture.pictureName,
+      pallete: picture.pallete,
+      pictureImage: picture.pictureImage,
+      size: picture.size,
+      price: picture.price,
+      quantity: picture.quantity === 1 ? picture.quantity : --picture.quantity,
+    };
+
+    const updates = {};
+    updates["/cart/" + picture.id] = pictureData;
+
+    return update(ref(db), updates);
+  }
+
+  function increaseInQuantity(picture) {
+    setTotalPrice(totalPrice + picture.price);
+
+    const db = getDatabase();
+
+    const pictureData = {
+      userUID: picture.userUID,
+      pictureName: picture.pictureName,
+      pallete: picture.pallete,
+      pictureImage: picture.pictureImage,
+      size: picture.size,
+      price: picture.price,
+      quantity: ++picture.quantity,
+    };
+
+    const updates = {};
+    updates["/cart/" + picture.id] = pictureData;
+
+    return update(ref(db), updates);
+  }
 
   return (
     <Container>
       <Wrapper>
-        <Title>Корзина</Title>
-        <Top>
-          <TopButton type="filled">CHECKOUT NOW</TopButton>
-        </Top>
+        <Title>{translate("cart")}</Title>
         <Bottom>
           <Info>
             {picturesList ? (
-              picturesList.map((picture, index) => {
+              picturesList.map((picture) => {
                 return (
                   <div>
                     <Product>
@@ -180,52 +250,78 @@ const Cart = () => {
                         <Image src={picture.pictureImage} />
                         <Details>
                           <ProductName>
-                            <b>Имя:</b> {picture.pictureName}
+                            <b>{translate("name")}:</b> {picture.pictureName}
                           </ProductName>
-                          {picture.pallete.map((colour, index) => {
-                            return <ProductColor color={colour} />;
-                          })}
+                          <br />
+                          <div style={{ display: "flex", flexWrap: "wrap" }}>
+                            {picture.pallete.map((colour) => {
+                              return <ProductColor color={colour} />;
+                            })}
+                          </div>
+                          <br />
                           <ProductSize>
-                            <b>Размер(диагональ):</b> {picture.size === 0 ? 50 : picture.size === 1 ? 65 : 80} см.
+                            <b>{translate("size")}:</b>{" "}
+                            {picture.size === 0
+                              ? 50
+                              : picture.size === 1
+                              ? 65
+                              : 80}{" "}
+                            {translate("sm")}.
                           </ProductSize>
                         </Details>
                       </ProductDetail>
                       <PriceDetail>
                         <ProductAmountContainer>
-                          <FiMinusCircle />
-                          <ProductAmount>2</ProductAmount>
-                          <FiPlusCircle />
+                          <ButtonDelete onClick={() => removePicture(picture.id)}>
+                            {translate("delete")}
+                          </ButtonDelete>
                         </ProductAmountContainer>
-                        <ProductPrice>BY {picture.size === 0 ? 20 : picture.size === 1 ? 25 : 30}</ProductPrice>
+                        <ProductAmountContainer>
+                          <FiMinusCircle
+                            onClick={() => decreaseInQuantity(picture)}
+                          />
+                          <ProductAmount>{picture.quantity}</ProductAmount>
+                          <FiPlusCircle
+                            onClick={() => increaseInQuantity(picture)}
+                          />
+                        </ProductAmountContainer>
+                        <ProductPrice>
+                          {picture.price * picture.quantity} BYN
+                        </ProductPrice>
                       </PriceDetail>
                     </Product>
+                    <br />
                     <Hr />
+                    <br />
                   </div>
                 );
               })
             ) : (
-              <h1>Корзина загружается</h1>
+              <h1>{translate("cartLoading")}</h1>
             )}
           </Info>
           <Summary>
-            <SummaryTitle>ORDER SUMMARY</SummaryTitle>
+            <SummaryTitle>{translate("order")}</SummaryTitle>
             <SummaryItem>
-              <SummaryItemText>Subtotal</SummaryItemText>
-              <SummaryItemPrice>$ 80</SummaryItemPrice>
-            </SummaryItem>
-            <SummaryItem>
-              <SummaryItemText>Estimated Shipping</SummaryItemText>
-              <SummaryItemPrice>$ 5.90</SummaryItemPrice>
-            </SummaryItem>
-            <SummaryItem>
-              <SummaryItemText>Shipping Discount</SummaryItemText>
-              <SummaryItemPrice>$ -5.90</SummaryItemPrice>
+              <SummaryItemText>{translate("quantityProduct")}</SummaryItemText>
+              <SummaryItemPrice>{quantityPictures}</SummaryItemPrice>
             </SummaryItem>
             <SummaryItem type="total">
-              <SummaryItemText>Total</SummaryItemText>
-              <SummaryItemPrice>$ 80</SummaryItemPrice>
+              <SummaryItemText>{translate("totalPrice")}</SummaryItemText>
+              <SummaryItemPrice>{totalPrice} BYN</SummaryItemPrice>
             </SummaryItem>
-            <Button>CHECKOUT NOW</Button>
+            <StripeCheckout
+              name="Paint by number generator"
+              image="https://avatars.githubusercontent.com/u/1486366?v=4"
+              billingAddress
+              shippingAddress
+              description={`Your total is ${totalPrice} BYN`}
+              amount={totalPrice * 100}
+              token={onToken}
+              stripeKey={KEY}
+            >
+              <Button>{translate("ordering")}</Button>
+            </StripeCheckout>
           </Summary>
         </Bottom>
       </Wrapper>

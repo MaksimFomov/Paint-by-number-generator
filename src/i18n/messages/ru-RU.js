@@ -8,7 +8,10 @@ export default {
     generator: "Генератор",
     coloringPicture: "Раскрашивание картины",
     shoppingCart: "Корзина товаров",
-    authorization: "Авторизация",
+    myProfile: 'Мой профиль',
+
+    //Home
+    desctiptionProject: "Создавай и раскрашивай картины по номерам онлайн",
 
     //Generator
     inputFile: 'Вставить из буфера обмена (ctrl + v), чтобы изменить изображение (или выберите файл',
@@ -71,6 +74,7 @@ export default {
     downloadSVG: 'Скачать SVG',
     downloadPNG: 'Скачать PNG',
     downloadPalette: 'Скачать палитру',
+    saveInProfile: 'Сохранить в профиль',
 
     //Coloring picture
     currentColor: 'Текущий цвет',
@@ -80,7 +84,23 @@ export default {
     save: 'Сохранить картинку на компьютер',
     imageNotLoaded: 'Изображение не загружено!',
 
+    //Shopping cart
+    cart: 'Корзина',
+    name: 'Имя',
+    size: 'Размер(диагональ)',
+    sm: 'см',
+    delete: 'Удалить',
+    cartLoading: 'Корзина загружается',
+    order: 'Заказ',
+    quantityProduct: 'Количество товаров',
+    totalPrice: 'Общая стоимость',
+    ordering: 'Заказать',
+
     //Dropdown menu
-    
+    myPictures: 'Мои картины',
+    authorization: 'Авторизация',
+    registration: 'Регистрация',
+    helpAboutTheProgram: 'Справка о программе',
+    exit: 'Выйти',
   },
 };

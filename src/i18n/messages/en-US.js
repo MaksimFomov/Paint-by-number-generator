@@ -8,7 +8,10 @@ export default {
     generator: "Gererator",
     coloringPicture: "Coloring picture",
     shoppingCart: "Shopping cart",
-    authorization: "Authorization",
+    myProfile: 'My profile',
+
+    //Home
+    desctiptionProject: "Create and color pictures by numbers online",
 
     //Generator
     inputFile: 'Paste from clipboard (ctrl+v) to change the image (or browse for a file',
@@ -71,6 +74,7 @@ export default {
     downloadSVG: 'Download SVG',
     downloadPNG: 'Download PNG',
     downloadPalette: 'Download palette',
+    saveInProfile: 'Save in profile',
 
     //Coloring picture
     currentColor: 'Current Color',
@@ -78,6 +82,25 @@ export default {
     savePictureInMyPicture: 'Save picture to my pictures',
     pictureName: 'Picture name',
     save: 'Save picture',
-    imageNotLoaded: 'Image not loaded!'
+    imageNotLoaded: 'Image not loaded!',
+
+    //Shopping cart
+    cart: 'Cart',
+    name: 'Name',
+    size: 'Size(diagonal)',
+    sm: 'cm',
+    delete: 'Delete',
+    cartLoading: 'Cart is loading',
+    order: 'Order',
+    quantityProduct: 'Quantity of goods',
+    totalPrice: 'Total price',
+    ordering: 'Order',
+    
+    //Dropdown menu
+    myPictures: 'My pictures',
+    authorization: 'Authorization',
+    registration: 'Registration',
+    helpAboutTheProgram: 'Help about the program',
+    exit: 'Exit',
   },
 };

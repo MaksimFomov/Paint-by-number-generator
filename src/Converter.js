@@ -31,32 +31,37 @@ const Converter = () => {
   const [checked8, setChecked8] = React.useState(false);
 
   async function savePicture() {
-    if (currentUser == null) {
+    if (currentUser === null) {
       history.push("/authorization");
     } else {
       try {
         const pictureName = prompt("Введите название картинки");
 
-        if(pictureName){
+        if (pictureName) {
           const db = getDatabase();
-          const pictureListRef = ref(db, 'pictures');
+          const pictureListRef = ref(db, "pictures");
           const newPictureRef = push(pictureListRef);
-    
-          set(newPictureRef, {
-            userUID: currentUser.uid,
-            pictureName: pictureName,
-            pallete: JSON.parse(localStorage.getItem("lastPictureColors")),
-            pictureImage: localStorage.getItem("lastPictureImgFirebase"),
-            cleanPicture: true,
-          });
-  
+
+          let blob = await fetch(localStorage.getItem("lastPictureImg")).then(r => r.blob());
+          var reader = new FileReader();
+          reader.readAsDataURL(blob);
+          reader.onloadend = function () {
+            var base64data = reader.result;
+
+            set(newPictureRef, {
+              userUID: currentUser.uid,
+              pictureName: pictureName,
+              pallete: JSON.parse(localStorage.getItem("lastPictureColors")),
+              pictureImage: base64data,
+              cleanPicture: true,
+            });
+          };
+
           alert("Картинка сохранена в профиль");
-        }
-        else {
+        } else {
           alert("Вы не ввели имя");
         }
-      }
-      catch {
+      } catch {
         alert("Ошибка при сохранении картинки в профиль");
       }
     }
@@ -158,7 +163,9 @@ const Converter = () => {
                     />
                   </div>
                   <div className="col s2">
-                    <label htmlFor="txtResizeHeight">{translate("height")}</label>
+                    <label htmlFor="txtResizeHeight">
+                      {translate("height")}
+                    </label>
                     <input
                       id="txtResizeHeight"
                       type="number"
@@ -217,7 +224,11 @@ const Converter = () => {
                       step="1"
                       className="validate"
                     />
-                    <label htmlFor="txtRandomSeed" data-tip data-for="randomSeed">
+                    <label
+                      htmlFor="txtRandomSeed"
+                      data-tip
+                      data-for="randomSeed"
+                    >
                       {translate("randomSeed")}
                       {tooltip("randomSeed")}
                     </label>
@@ -289,9 +300,7 @@ const Converter = () => {
                       id="txtKMeansColorRestrictions"
                       className="materialize-textarea validate"
                       defaultValue="/0,0,0 /255,255,255"
-                    >
-                      
-                    </textarea>
+                    ></textarea>
                   </div>
                 </div>
               </li>
@@ -667,12 +676,18 @@ const Converter = () => {
 
             <div className="row">
               <div className="col s3">
-                <label className="waves-effect waves-light btn" id="btnDownloadSVG">
+                <label
+                  className="waves-effect waves-light btn"
+                  id="btnDownloadSVG"
+                >
                   {translate("downloadSVG")}
                 </label>
               </div>
               <div className="col s3">
-                <label className="waves-effect waves-light btn" id="btnDownloadPNG">
+                <label
+                  className="waves-effect waves-light btn"
+                  id="btnDownloadPNG"
+                >
                   {translate("downloadPNG")}
                 </label>
               </div>
@@ -687,11 +702,9 @@ const Converter = () => {
             </div>
             <div className="row"></div>
             <div className="row">
-            <div className="col s3"></div>
+              <div className="col s3"></div>
               <div className="col s3">
-                <Button onClick={savePicture}>
-                  Сохранить в профиль
-                </Button>
+                <Button onClick={savePicture}>{translate("saveInProfile")}</Button>
               </div>
             </div>
           </div>

@@ -256,6 +256,7 @@ class ColoringPicture extends Component {
                 pallete: pallete,
                 pictureImage: this.canvas.toDataURL("image/jpeg"),
                 cleanPicture: false,
+                activeSize: 0,
               });
             } else {
               set(ref(db, "pictures/" + this.state.pictureId), {
@@ -264,6 +265,7 @@ class ColoringPicture extends Component {
                 pallete: pallete,
                 pictureImage: this.canvas.toDataURL("image/jpeg"),
                 cleanPicture: false,
+                activeSize: 0,
               });
             }
 

@@ -7,10 +7,9 @@ import {
   updatePassword,
   reauthenticateWithCredential,
   EmailAuthProvider,
-  updateEmail,
-  sendPasswordResetEmail,
 } from "firebase/auth";
 import { useHistory } from "react-router-dom";
+import translate from "../i18n/translate";
 
 const Container = styled.div`
   width: 100vw;
@@ -105,19 +104,19 @@ const MyProfile = () => {
   return (
     <Container>
       <Wrapper>
-        <Title>Мой аккаунт</Title>
-        <Title1>Почта: {user?.email}</Title1>
-        <Title>Смена пароля</Title>
+        <Title>{translate("myAccount")}</Title>
+        <Title1>{translate("mail")}: {user?.email}</Title1>
+        <Title>{translate("editPassword")}</Title>
         <div style={{ display: "flex", flexWrap: "wrap" }}>
           <Agreement>
-            Для смены пароля необходимо ввести старый пароль
+            {translate("editPassText")}
           </Agreement>
           <div className="form-fields">
             <div className="form-field">
               <input
                 style={{ minWidth: "540px" }}
                 type="password"
-                placeholder="Старый пароль"
+                placeholder={localStorage.getItem("language") === "ru-ru" ? "Старый пароль" : "Last password"}
                 required
                 minlength="8"
                 maxlength="128"
@@ -129,7 +128,7 @@ const MyProfile = () => {
               <input
                 style={{ minWidth: "540px" }}
                 type="password"
-                placeholder="Новый пароль"
+                placeholder={localStorage.getItem("language") === "ru-ru" ? "Новый пароль" : "New password"}
                 required
                 minlength="8"
                 maxlength="128"
@@ -138,7 +137,7 @@ const MyProfile = () => {
               />
             </div>
           </div>
-          <Button onClick={() => resetPassword()}>Обновить данные</Button>
+          <Button onClick={() => resetPassword()}>{translate("updatePassword")}</Button>
         </div>
       </Wrapper>
     </Container>

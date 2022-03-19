@@ -4,6 +4,7 @@ import classNames from "classnames";
 import "../styles/my-image.css";
 import { getDatabase, ref, onValue, set, update } from "firebase/database";
 import { useAuth } from "../firebase";
+import translate from "../i18n/translate";
 
 function Myimage() {
   const currentUser = useAuth();
@@ -16,13 +17,25 @@ function Myimage() {
 
   const availableSizes = [50, 65, 80];
 
-  const [activeSize, setActiveSize] = useState(0);
-
-  const onSelectSize = (index) => {
-    setActiveSize(index);
-  };
-
   const [picturesList, setPicturesList] = useState();
+
+  const onSelectSize = (picture, index) => {
+    const db = getDatabase();
+
+      const pictureData = {
+        userUID: picture.userUID,
+        pictureName: picture.pictureName,
+        pallete: picture.pallete,
+        pictureImage: picture.pictureImage,
+        cleanPicture: picture.cleanPicture,
+        activeSize: index,
+      };
+
+      const updates = {};
+      updates["/pictures/" + picture.id] = pictureData;
+
+      return update(ref(db), updates);
+  };
 
   function rgb2hex(r, g, b) {
     return "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
@@ -50,7 +63,7 @@ function Myimage() {
   }
 
   function editPicture(picture) {
-    var pictureName = prompt("Введите новое имя");
+    var pictureName = prompt(localStorage.getItem("language") === "ru-ru" ? "Введите новое имя" : "Enter new name");
 
     if (pictureName) {
       const db = getDatabase();
@@ -61,6 +74,7 @@ function Myimage() {
         pallete: picture.pallete,
         pictureImage: picture.pictureImage,
         cleanPicture: picture.cleanPicture,
+        activeSize: picture.activeSize,
       };
 
       const updates = {};
@@ -105,20 +119,20 @@ function Myimage() {
       pictureName: picture.pictureName,
       pictureImage: picture.pictureImage,
       pallete: picture.pallete,
-      size: activeSize,
+      size: picture.activeSize,
       quantity: 1,
-      price: activeSize === 0 ? 20 : activeSize === 1 ? 25 : 30,
+      price: picture.activeSize === 0 ? 20 : picture.activeSize === 1 ? 25 : 30,
     });
 
-    alert("Картина добавлена в корзину");
+    alert(localStorage.getItem("language") === "ru-ru" ? "Картина добавлена в корзину" : "Picture adding to cart");
   }
 
-  function ImageItem({ picture }) {
+  function ImageItem({ picture, id }) {
     return (
       <div className="pizza-block">
         <h4 className="pizza-block__title">{picture.pictureName}</h4>
-        <button style={{ marginRight: "30px" }} onClick={() => removePicture(picture.id)}>Удалить</button>
-        <button onClick={() => editPicture(picture)}>Изменить</button>
+        <button style={{ marginRight: "30px" }} onClick={() => removePicture(picture.id)}>{translate("delete")}</button>
+        <button onClick={() => editPicture(picture)}>{translate("edit")}</button>
         <img
           className="pizza-block__image"
           src={picture.pictureImage}
@@ -143,15 +157,15 @@ function Myimage() {
         <br />
         <div className="pizza-block__selector">
           <ul>
-            <a1>Размер холста(диагональ)</a1>
+            <a1>{translate("sizes")}</a1>
           </ul>
           <ul>
             {availableSizes.map((size, index) => (
               <li
                 key={size}
-                onClick={() => onSelectSize(index)}
+                onClick={() => onSelectSize(picture, index)}
                 className={classNames({
-                  active: activeSize === index,
+                  active: picturesList[id].activeSize === index && picture.id === picturesList[id].id,
                   disabled: !availableSizes.includes(size),
                 })}
               >
@@ -162,9 +176,9 @@ function Myimage() {
         </div>
         <div className="pizza-block__bottom">
           <div className="pizza-block__price">
-            {activeSize === 0
+            {picture.activeSize === 0
               ? "20 BYN"
-              : activeSize === 1
+              : picture.activeSize === 1
               ? "25 BYN"
               : "30 BYN"}
           </div>
@@ -185,7 +199,7 @@ function Myimage() {
                 fill="white"
               />
             </svg>
-            <span>Добавить в корзину</span>
+            <span>{translate("addToCart")}</span>
           </button>
           <br />
           <br />
@@ -200,7 +214,7 @@ function Myimage() {
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             ></svg>
-            <span style={{ marginRight: "13px" }}>Раскрасить</span>
+            <span style={{ marginRight: "13px" }}>{translate("coloring")}</span>
           </button>
         </div>
       </div>
@@ -211,14 +225,14 @@ function Myimage() {
     <div className="wrapper">
       <div className="content">
         <div className="container">
-          <h2 className="content__title">Мои картины</h2>
+          <h2 className="content__title">{translate("myPictures")}</h2>
           <div className="content__items">
             {picturesList ? (
               picturesList.map((picture, index) => {
-                return <ImageItem picture={picture} key={index} />;
+                return <ImageItem picture={picture} id={index} />;
               })
             ) : (
-              <h1>Картины загружаются или не найдены</h1>
+              <h1>{translate("loadPictures")}</h1>
             )}
           </div>
         </div>

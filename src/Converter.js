@@ -54,6 +54,7 @@ const Converter = () => {
               pallete: JSON.parse(localStorage.getItem("lastPictureColors")),
               pictureImage: base64data,
               cleanPicture: true,
+              activeSize: 0,
             });
           };
 

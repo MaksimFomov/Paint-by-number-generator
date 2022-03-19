@@ -24,11 +24,6 @@ const Title = styled.h1`
   font-weight: 300;
 `;
 
-const Form = styled.form`
-  display: flex;
-  flex-wrap: wrap;
-`;
-
 const Agreement = styled.span`
   font-size: 12px;
   margin: 20px 0px;

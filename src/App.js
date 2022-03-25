@@ -16,6 +16,8 @@ import Cart from "./pages/Cart";
 import MyProfile from "./components/MyProfile";
 import ReestablishPassword from "./components/ReestablishPassword";
 import Info from "./components/Info";
+import Payment from "./pages/Payment";
+import MyOrders from "./components/MyOrders";
 
 function App() {
   const dispatch = useDispatch();
@@ -56,11 +58,17 @@ function App() {
           <Route path="/my-image">
             <Myimage />
           </Route>
+          <Route path="/my-orders">
+            <MyOrders/>
+          </Route>
           <Route path="/reset-password">
             <ReestablishPassword />
           </Route>
           <Route path="/info">
             <Info />
+          </Route>
+          <Route path="/checkout">
+            <Payment />
           </Route>
         </Switch>
       </Layout>

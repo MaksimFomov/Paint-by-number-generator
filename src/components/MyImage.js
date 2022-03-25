@@ -22,19 +22,19 @@ function Myimage() {
   const onSelectSize = (picture, index) => {
     const db = getDatabase();
 
-      const pictureData = {
-        userUID: picture.userUID,
-        pictureName: picture.pictureName,
-        pallete: picture.pallete,
-        pictureImage: picture.pictureImage,
-        cleanPicture: picture.cleanPicture,
-        activeSize: index,
-      };
+    const pictureData = {
+      userUID: picture.userUID,
+      pictureName: picture.pictureName,
+      pallete: picture.pallete,
+      pictureImage: picture.pictureImage,
+      cleanPicture: picture.cleanPicture,
+      activeSize: index,
+    };
 
-      const updates = {};
-      updates["/pictures/" + picture.id] = pictureData;
+    const updates = {};
+    updates["/pictures/" + picture.id] = pictureData;
 
-      return update(ref(db), updates);
+    return update(ref(db), updates);
   };
 
   function rgb2hex(r, g, b) {
@@ -63,7 +63,11 @@ function Myimage() {
   }
 
   function editPicture(picture) {
-    var pictureName = prompt(localStorage.getItem("language") === "ru-ru" ? "Введите новое имя" : "Enter new name");
+    var pictureName = prompt(
+      localStorage.getItem("language") === "ru-ru"
+        ? "Введите новое имя"
+        : "Enter new name"
+    );
 
     if (pictureName) {
       const db = getDatabase();
@@ -124,15 +128,26 @@ function Myimage() {
       price: picture.activeSize === 0 ? 20 : picture.activeSize === 1 ? 25 : 30,
     });
 
-    alert(localStorage.getItem("language") === "ru-ru" ? "Картина добавлена в корзину" : "Picture adding to cart");
+    alert(
+      localStorage.getItem("language") === "ru-ru"
+        ? "Картина добавлена в корзину"
+        : "Picture adding to cart"
+    );
   }
 
   function ImageItem({ picture, id }) {
     return (
       <div className="pizza-block">
         <h4 className="pizza-block__title">{picture.pictureName}</h4>
-        <button style={{ marginRight: "30px" }} onClick={() => removePicture(picture.id)}>{translate("delete")}</button>
-        <button onClick={() => editPicture(picture)}>{translate("edit")}</button>
+        <button
+          style={{ marginRight: "30px" }}
+          onClick={() => removePicture(picture.id)}
+        >
+          {translate("delete")}
+        </button>
+        <button onClick={() => editPicture(picture)}>
+          {translate("edit")}
+        </button>
         <img
           className="pizza-block__image"
           src={picture.pictureImage}
@@ -165,7 +180,9 @@ function Myimage() {
                 key={size}
                 onClick={() => onSelectSize(picture, index)}
                 className={classNames({
-                  active: picturesList[id].activeSize === index && picture.id === picturesList[id].id,
+                  active:
+                    picturesList[id].activeSize === index &&
+                    picture.id === picturesList[id].id,
                   disabled: !availableSizes.includes(size),
                 })}
               >

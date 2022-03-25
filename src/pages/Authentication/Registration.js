@@ -3,6 +3,7 @@ import { useAuth, signup } from "../../firebase";
 import "../../styles/authentification.css";
 import { Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
+import translate from "../../i18n/translate";
 
 const Registration = () => {
   const history = useHistory();
@@ -16,10 +17,10 @@ const Registration = () => {
     setLoading(true);
     try {
       await signup(emailRef.current.value, passwordRef.current.value);
-      alert("Успешная регистрация");
+      alert(localStorage.getItem("language") === "ru-ru" ? "Успешная регистрация" : "Successful registration");
       history.push("/");
     } catch {
-      alert("Такой аккаунт уже существует или неправильно введена почта!");
+      alert(localStorage.getItem("language") === "ru-ru" ? "Такой аккаунт уже существует или неправильно введена почта!" : "Such an account already exists or the mail is entered incorrectly!");
     }
     setLoading(false);
   }
@@ -30,7 +31,7 @@ const Registration = () => {
         <div className="circle"></div>
         <div className="register-form-container">
           <form action="">
-            <h1 className="form-title">Регистрация</h1>
+            <h1 className="form-title">{translate("registration")}</h1>
             <div className="form-fields">
               <div className="form-field">
                 <input
@@ -57,7 +58,7 @@ const Registration = () => {
                 disabled={loading || currentUser != null}
                 onClick={handleSignup}
               >
-                Регистрация
+                {translate("register")}
               </Button>
             </div>
           </form>

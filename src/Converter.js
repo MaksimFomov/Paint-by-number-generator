@@ -35,14 +35,20 @@ const Converter = () => {
       history.push("/authorization");
     } else {
       try {
-        const pictureName = prompt("Введите название картинки");
+        const pictureName = prompt(
+          localStorage.getItem("language") === "ru-ru"
+            ? "Введите название картинки"
+            : "Enter the name of the picture"
+        );
 
         if (pictureName) {
           const db = getDatabase();
           const pictureListRef = ref(db, "pictures");
           const newPictureRef = push(pictureListRef);
 
-          let blob = await fetch(localStorage.getItem("lastPictureImg")).then(r => r.blob());
+          let blob = await fetch(localStorage.getItem("lastPictureImg")).then(
+            (r) => r.blob()
+          );
           var reader = new FileReader();
           reader.readAsDataURL(blob);
           reader.onloadend = function () {
@@ -58,12 +64,24 @@ const Converter = () => {
             });
           };
 
-          alert("Картинка сохранена в профиль");
+          alert(
+            localStorage.getItem("language") === "ru-ru"
+              ? "Картинка сохранена в профиль"
+              : "Picture saved to profile"
+          );
         } else {
-          alert("Вы не ввели имя");
+          alert(
+            localStorage.getItem("language") === "ru-ru"
+              ? "Вы не ввели имя"
+              : "You didn't enter a name"
+          );
         }
       } catch {
-        alert("Ошибка при сохранении картинки в профиль");
+        alert(
+          localStorage.getItem("language") === "ru-ru"
+            ? "Ошибка при сохранении картинки в профиль"
+            : "Error when saving profile picture"
+        );
       }
     }
   }
@@ -705,7 +723,9 @@ const Converter = () => {
             <div className="row">
               <div className="col s3"></div>
               <div className="col s3">
-                <Button onClick={savePicture}>{translate("saveInProfile")}</Button>
+                <Button onClick={savePicture}>
+                  {translate("saveInProfile")}
+                </Button>
               </div>
             </div>
           </div>

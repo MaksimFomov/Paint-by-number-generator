@@ -216,11 +216,17 @@ class ColoringPicture extends Component {
       };
       this.img.onerror = () => {
         this.setState({ colors: this.standartPallete });
-        alert("Картинка не найдена, сгенерируйте новую!");
+        alert(
+          localStorage.getItem("language") === "ru-ru"
+            ? "Картинка не найдена, сгенерируйте новую!"
+            : "Image not found, please generate a new one!"
+        );
       };
     } else {
       alert(
-        "Последняя картинка или палитра не найдена, попробуйте сгенерировать картинку."
+        localStorage.getItem("language") === "ru-ru"
+          ? "Последняя картинка или палитра не найдена, попробуйте сгенерировать картинку."
+          : "Last picture or palette not found, try to generate a picture."
       );
     }
   }
@@ -232,7 +238,11 @@ class ColoringPicture extends Component {
         if (user) {
           const userUid = user.uid;
 
-          const pictureName = prompt("Введите название картинки");
+          const pictureName = prompt(
+            localStorage.getItem("language") === "ru-ru"
+              ? "Введите название картинки"
+              : "Enter the name of the picture"
+          );
 
           if (pictureName) {
             const db = getDatabase();
@@ -269,16 +279,32 @@ class ColoringPicture extends Component {
               });
             }
 
-            alert("Картинка сохранена в профиль!");
+            alert(
+              localStorage.getItem("language") === "ru-ru"
+                ? "Картинка сохранена в профиль!"
+                : "Picture saved to profile!"
+            );
           } else {
-            alert("Вы не ввели имя!");
+            alert(
+              localStorage.getItem("language") === "ru-ru"
+                ? "Вы не ввели имя!"
+                : "You didn't enter a name!"
+            );
           }
         } else {
-          alert("Вы не авторизованы!");
+          alert(
+            localStorage.getItem("language") === "ru-ru"
+              ? "Вы не авторизованы!"
+              : "you are not authorized!"
+          );
         }
       });
     } else {
-      alert("Вы не добавили картинку!");
+      alert(
+        localStorage.getItem("language") === "ru-ru"
+          ? "Вы не добавили картинку!"
+          : "You have not added a picture!"
+      );
     }
   }
 
@@ -326,7 +352,11 @@ class ColoringPicture extends Component {
 
   async savePicture() {
     if (this.state.imageLoaded) {
-      const pictureName = prompt("Введите имя изображения");
+      const pictureName = prompt(
+        localStorage.getItem("language") === "ru-ru"
+          ? "Введите имя изображения"
+          : "Enter picture name"
+      );
       if (pictureName) {
         var dataURL = this.canvas.toDataURL("image/jpeg");
         var link = document.createElement("a");
@@ -335,7 +365,11 @@ class ColoringPicture extends Component {
         link.click();
       }
     } else {
-      alert(translate("imageNotLoaded"));
+      alert(
+        localStorage.getItem("language") === "ru-ru"
+          ? "Изображение не загружено!"
+          : "Image not loaded!"
+      );
     }
   }
 

@@ -42,7 +42,7 @@ function DropdownMenu() {
     try {
       await logout();
     } catch {
-      alert("Ошибка");
+      alert(localStorage.getItem("language") === "ru-ru" ? "Ошибка" : "Error");
     }
     setLoading(false);
   }
@@ -67,6 +67,13 @@ function DropdownMenu() {
             <DropdownItem>
               <Link to="/my-image" onClick={menuToggleHandler}>
                 {translate("myPictures")}
+              </Link>
+            </DropdownItem>
+          ) : null}
+          {currentUser != null ? (
+            <DropdownItem>
+              <Link to="/my-orders" onClick={menuToggleHandler}>
+                {translate("myOrders")}
               </Link>
             </DropdownItem>
           ) : null}

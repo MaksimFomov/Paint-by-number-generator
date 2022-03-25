@@ -110,6 +110,7 @@ export default {
 
     //Dropdown menu
     myPictures: "My pictures",
+    myOrders: "My orders",
     authorization: "Authorization",
     registration: "Registration",
     helpAboutTheProgram: "Help about the program",
@@ -123,6 +124,7 @@ export default {
     lastPassword: "Last password",
     newPassword: "New password",
     updatePassword: "Update password",
+    restorePassword: "Restore password",
 
     //My images
     edit: "Edit",
@@ -140,5 +142,12 @@ export default {
     info6: "Coloring a picture by numbers",
     info7: "Ordering a painting by numbers and palettes of colors",
     info8: "Switch language",
+
+    //Authorization
+    password: "Password",
+    logIn: "Log in",
+
+    //Registration
+    register: "Register",
   },
 };

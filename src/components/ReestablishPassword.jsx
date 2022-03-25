@@ -51,10 +51,10 @@ const ReestablishPassword = () => {
   const reestablishPassword = () => {
     sendPasswordResetEmail(auth, email)
       .then(() => {
-        alert("Сообщение с восстановлением отправлено на почту");
+        alert(localStorage.getItem("language") === "ru-ru" ? "Сообщение с восстановлением отправлено на почту" : "Recovery message sent to email");
       })
       .catch((error) => {
-        alert("Указанной почты не найдено");
+        alert(localStorage.getItem("language") === "ru-ru" ? "Указанной почты не найдено" : "The specified mail was not found");
       });
   };
 

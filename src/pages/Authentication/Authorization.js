@@ -3,6 +3,7 @@ import { useAuth, login } from "../../firebase";
 import "../../styles/authentification.css";
 import { Button } from "react-bootstrap";
 import { useHistory } from "react-router-dom";
+import translate from "../../i18n/translate";
 
 const Authorization = () => {
   const history = useHistory();
@@ -16,10 +17,10 @@ const Authorization = () => {
     setLoading(true);
     try {
       await login(emailRef.current.value, passwordRef.current.value);
-      alert("Успешная авторизация");
+      alert(localStorage.getItem("language") === "ru-ru" ? "Успешная авторизация" : "Successful authorization");
       history.push("/");
     } catch {
-      alert("Проверьте введенные данные!");
+      alert(localStorage.getItem("language") === "ru-ru" ? "Проверьте введенные данные!" : "Check the entered data!");
     }
     setLoading(false);
   }
@@ -30,7 +31,7 @@ const Authorization = () => {
         <div className="circle"></div>
         <div className="register-form-container">
           <form action="">
-            <h1 className="form-title">Авторизация</h1>
+            <h1 className="form-title">{translate("authorization")}</h1>
             <div className="form-fields">
               <div className="form-field">
                 <input
@@ -57,14 +58,14 @@ const Authorization = () => {
                 disabled={loading || currentUser != null}
                 onClick={handleLogin}
               >
-                Авторизация
+                {translate("logIn")}
               </Button>
               <p>.</p>
               <Button
                 className="button"
                 onClick={() => history.push("/reset-password")}
               >
-                Восстановить пароль
+                {translate("restorePassword")}
               </Button>
             </div>
           </form>

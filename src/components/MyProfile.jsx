@@ -7,6 +7,7 @@ import {
   updatePassword,
   reauthenticateWithCredential,
   EmailAuthProvider,
+  sendPasswordResetEmail,
 } from "firebase/auth";
 import { useHistory } from "react-router-dom";
 import translate from "../i18n/translate";
@@ -49,7 +50,8 @@ const Button = styled.button`
   background-color: teal;
   color: white;
   cursor: pointer;
-  margin-left: 150px;
+  margin-left: 25px;
+  margin-right: 28px;
 `;
 
 const MyProfile = () => {
@@ -85,20 +87,30 @@ const MyProfile = () => {
         .then(() => {
           updatePassword(user, newPassword)
             .then(() => {
-              alert("Успешная смена пароля");
+              alert(localStorage.getItem("language") === "ru-ru" ? "Успешная смена пароля" : "Successful password change");
               setLastPassword("");
               setNewPassword("");
             })
-            .catch((error) => {
-              alert(error.message);
+            .catch(() => {
+              alert(localStorage.getItem("language") === "ru-ru" ? "Ошибка" : "Error");
             });
         })
         .catch((error) => {
-          alert("Не верный старый пароль");
+          alert(localStorage.getItem("language") === "ru-ru" ? "Не верный старый пароль" : "Wrong old password");
         });
     } else {
-      alert("Не все поля заполнены");
+      alert(localStorage.getItem("language") === "ru-ru" ? "Не все поля заполнены" : "Not all fields are filled");
     }
+  };
+
+  const reestablishPassword = () => {
+    sendPasswordResetEmail(auth, currentUser.email)
+      .then(() => {
+        alert(localStorage.getItem("language") === "ru-ru" ? "Сообщение с восстановлением отправлено на почту" : "Recovery message sent to email");
+      })
+      .catch((error) => {
+        alert(localStorage.getItem("language") === "ru-ru" ? "Указанной почты не найдено" : "The specified mail was not found");
+      });
   };
 
   return (
@@ -138,6 +150,7 @@ const MyProfile = () => {
             </div>
           </div>
           <Button onClick={() => resetPassword()}>{translate("updatePassword")}</Button>
+          <Button onClick={() => reestablishPassword()}>{translate("restorePassword")}</Button>
         </div>
       </Wrapper>
     </Container>

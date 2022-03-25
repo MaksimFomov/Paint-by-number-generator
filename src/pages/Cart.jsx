@@ -6,10 +6,7 @@ import { mobile } from "../responsive";
 import { getDatabase, ref, onValue, set, update } from "firebase/database";
 import { useAuth } from "../firebase";
 import { useHistory } from "react-router-dom";
-import StripeCheckout from "react-stripe-checkout";
 import translate from "../i18n/translate";
-
-const KEY = process.env.REACT_APP_STRIPE;
 
 const Container = styled.div``;
 
@@ -152,16 +149,7 @@ const Cart = () => {
   const [picturesList, setPicturesList] = useState();
 
   const [totalPrice, setTotalPrice] = useState();
-
   const [quantityPictures, setQuantityPictures] = useState();
-
-  const [stripeToken, setStripeToken] = useState(null);
-
-  const onToken = (token) => {
-    setStripeToken(token);
-  };
-
-  console.log(stripeToken);
 
   useEffect(() => {
     const db = getDatabase();
@@ -184,6 +172,7 @@ const Cart = () => {
         return sum + elem;
       }, 0);
       setTotalPrice(price);
+      localStorage.setItem("totalPrice", price);
 
       setQuantityPictures(totalPrice.length);
     });
@@ -272,7 +261,9 @@ const Cart = () => {
                       </ProductDetail>
                       <PriceDetail>
                         <ProductAmountContainer>
-                          <ButtonDelete onClick={() => removePicture(picture.id)}>
+                          <ButtonDelete
+                            onClick={() => removePicture(picture.id)}
+                          >
                             {translate("delete")}
                           </ButtonDelete>
                         </ProductAmountContainer>
@@ -310,18 +301,19 @@ const Cart = () => {
               <SummaryItemText>{translate("totalPrice")}</SummaryItemText>
               <SummaryItemPrice>{totalPrice} BYN</SummaryItemPrice>
             </SummaryItem>
-            <StripeCheckout
-              name="Paint by number generator"
-              image="https://avatars.githubusercontent.com/u/1486366?v=4"
-              billingAddress
-              shippingAddress
-              description={`Your total is ${totalPrice} BYN`}
-              amount={totalPrice * 100}
-              token={onToken}
-              stripeKey={KEY}
+            <Button
+              onClick={() =>
+                totalPrice !== 0
+                  ? history.push("/checkout")
+                  : alert(
+                      localStorage.getItem("language") === "ru-ru"
+                        ? "Корзина пустая"
+                        : "Cart is empty"
+                    )
+              }
             >
-              <Button>{translate("ordering")}</Button>
-            </StripeCheckout>
+              Оплатить
+            </Button>
           </Summary>
         </Bottom>
       </Wrapper>

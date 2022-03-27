@@ -132,6 +132,7 @@ export default {
     addToCart: "Add to cart",
     coloring: "Colorize",
     loadPictures: "Pictures are loading or not found",
+    loadOrders: "Orders are loading or not found",
 
     //Info
     info1: "Web application for creating pictures by numbers.",

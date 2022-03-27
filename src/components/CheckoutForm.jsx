@@ -5,7 +5,7 @@ import {
   useElements,
 } from "@stripe/react-stripe-js";
 import styled from "styled-components";
-import { getDatabase, ref, onValue, set, push } from "firebase/database";
+import { getDatabase, ref, onValue, set } from "firebase/database";
 import { useAuth } from "../firebase";
 
 const Form = styled.form`
@@ -90,7 +90,7 @@ export default function CheckoutForm() {
       elements,
       confirmParams: {
         // Make sure to change this to your payment completion page
-        return_url: "http://localhost:3000",
+        return_url: "http://localhost:3000/my-orders",
         receipt_email: email,
       },
     });
@@ -124,8 +124,6 @@ export default function CheckoutForm() {
       }
     });
 
-    const pictureListRef = ref(db, "orders");
-
     let date = new Date();
     let orderDate =
       String(date.getDate()).padStart(2, "0") +
@@ -135,15 +133,14 @@ export default function CheckoutForm() {
       date.getFullYear();
 
     for (let i = 0; i < picturesList.length; i++) {
-      const newPictureRef = push(pictureListRef);
-      set(newPictureRef, {
+      set(ref(db, "order/" + picturesList[i].id), {
         userUID: currentUser.uid,
         pictureName: picturesList[i].pictureName,
         pallete: picturesList[i].pallete,
         pictureImage: picturesList[i].pictureImage,
         size: picturesList[i].size,
         quantity: picturesList[i].quantity,
-        price: picturesList[i].price,
+        price: picturesList[i].price * picturesList[i].quantity,
         orderDate: orderDate,
       });
     }
@@ -159,7 +156,7 @@ export default function CheckoutForm() {
         placeholder="Введите email адрес"
       />
       <PaymentElement id="payment-element" />
-      <h4>Цена товаров: {localStorage.getItem("totalPrice")}</h4>
+      <h4>Цена товаров: {localStorage.getItem("totalPrice")} BYN</h4>
       <Button
         onClick={saveOrder}
         disabled={isLoading || !stripe || !elements}

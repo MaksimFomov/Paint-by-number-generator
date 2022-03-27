@@ -193,8 +193,8 @@ const Cart = () => {
       pallete: picture.pallete,
       pictureImage: picture.pictureImage,
       size: picture.size,
-      price: picture.price,
       quantity: picture.quantity === 1 ? picture.quantity : --picture.quantity,
+      price: picture.price,
     };
 
     const updates = {};
@@ -214,8 +214,8 @@ const Cart = () => {
       pallete: picture.pallete,
       pictureImage: picture.pictureImage,
       size: picture.size,
-      price: picture.price,
       quantity: ++picture.quantity,
+      price: picture.price,
     };
 
     const updates = {};

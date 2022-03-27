@@ -2,7 +2,14 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import classNames from "classnames";
 import "../styles/my-image.css";
-import { getDatabase, ref, onValue, set, update } from "firebase/database";
+import {
+  getDatabase,
+  ref,
+  onValue,
+  set,
+  update,
+  push,
+} from "firebase/database";
 import { useAuth } from "../firebase";
 import translate from "../i18n/translate";
 
@@ -109,20 +116,21 @@ function Myimage() {
   }
 
   function addToCart(picture) {
-    for (let i = 0; i < picture.pallete.length; i++) {
-      picture.pallete[i] = rgb2hex(
-        picture.pallete[i][0],
-        picture.pallete[i][1],
-        picture.pallete[i][2]
-      );
-    }
+    const pallete = [];
+
+    // eslint-disable-next-line array-callback-return
+    picture.pallete.map((colour) => {
+      pallete.push(rgb2hex(colour[0], colour[1], colour[2]));
+    });
 
     const db = getDatabase();
-    set(ref(db, "cart/" + picture.id), {
+    const pictureListRef = ref(db, "cart");
+    const newPictureRef = push(pictureListRef);
+    set(newPictureRef, {
       userUID: picture.userUID,
       pictureName: picture.pictureName,
       pictureImage: picture.pictureImage,
-      pallete: picture.pallete,
+      pallete: pallete,
       size: picture.activeSize,
       quantity: 1,
       price: picture.activeSize === 0 ? 20 : picture.activeSize === 1 ? 25 : 30,
@@ -170,7 +178,10 @@ function Myimage() {
           </ul>
         </div>
         <br />
-        <div className="pizza-block__selector">
+        <div
+          style={{ display: picture.cleanPicture ? "brhbfhr" : "none" }}
+          className="pizza-block__selector"
+        >
           <ul>
             <a1>{translate("sizes")}</a1>
           </ul>
@@ -192,7 +203,10 @@ function Myimage() {
           </ul>
         </div>
         <div className="pizza-block__bottom">
-          <div className="pizza-block__price">
+          <div
+            style={{ display: picture.cleanPicture ? "brhbfhr" : "none" }}
+            className="pizza-block__price"
+          >
             {picture.activeSize === 0
               ? "20 BYN"
               : picture.activeSize === 1
@@ -218,8 +232,8 @@ function Myimage() {
             </svg>
             <span>{translate("addToCart")}</span>
           </button>
-          <br />
-          <br />
+          <br style={{ display: picture.cleanPicture ? "brhbfhr" : "none" }} />
+          <br style={{ display: picture.cleanPicture ? "brhbfhr" : "none" }} />
           <button
             className="button1 button--outline button--add"
             onClick={() => colorizePicture(picture)}
